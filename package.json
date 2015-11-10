@@ -5,7 +5,7 @@
   "private": true,
   "main": "lib/main.js",
   "bin": {
-    "bravado-client-gen": "bin/generate"
+    "bravado-client-generator": "bin/generate"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
