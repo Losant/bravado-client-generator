@@ -1,5 +1,5 @@
 {
-  "name": "bravado-client-gen",
+  "name": "bravado-client-generator",
   "version": "0.1.0",
   "description": "Code generator for Bravado API clients",
   "private": true,
