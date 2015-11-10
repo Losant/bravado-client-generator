@@ -15,12 +15,12 @@ module.exports = function (options) {
    *
    * Parameters:
    {{#definedParams ../api ../resource action}}
-   {{descParameter ../../options .}}
+   {{descParameter '*   ' ../../options .}}
    {{/definedParams}}
    *
    * Responses:
    {{#each action.responses as |response code|}}
-   {{descResponse ../../options code response}}
+   {{descResponse '*  ' ../../options code response}}
    {{/each}}
    */
   internals.{{actionName}} = function (params, cb) {
