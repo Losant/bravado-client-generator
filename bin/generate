@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+var program = require('commander');
+var chalk = require('chalk');
+var main = require('../lib/main');
+
+program
+  .version('0.1.0')
+  .option('-u, --url <url>', 'URL to API spec')
+  .option('-v, --version [version]', 'Version of the API [*]', '*')
+  .option('-l, --lang [lang]', 'Language of generated client [js]', 'js')
+  .option('-o, --output <dir>', 'Output directory', '.')
+  .parse(process.argv);
+
+main({
+  url: program.url,
+  version: program.version,
+  lang: program.lang,
+  output: program.output
+})
+.then(function () {
+  console.log('%s', chalk.bold.green('Success'))
+})
+.catch(function (err) {
+  console.log('%s: %s', chalk.bold.red('Error'), err.stack);
+});
