@@ -3,6 +3,7 @@ var uriTemplate = require('uri-template');
 
 module.exports = function (options) {
   var internals = {};
+  var endpoint = options.url || '{{options.url}}';
 
   {{#each resource.actions as |action actionName|}}
   /**
@@ -29,7 +30,7 @@ module.exports = function (options) {
       params = {};
     }
     params = params || {};
-    var tpl = uriTemplate.parse('{{{resolveUrl ../options.url ../api.basePath ../resource.path action.path}}}');
+    var tpl = uriTemplate.parse(endpoint + '{{{joinPath ../api.basePath ../resource.path action.path}}}');
     var pathParams = {};
     var req = {
       method: '{{action.method}}',
