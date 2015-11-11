@@ -24,11 +24,16 @@ module.exports = function (options) {
    {{descResponse '*  ' ../../options code response}}
    {{/each}}
    */
-  internals.{{actionName}} = function (params, cb) {
+  internals.{{actionName}} = function (params, opts, cb) {
     if ('function' === typeof params) {
       cb = params;
       params = {};
+      opts = {};
+    } else if ('function' === typeof opts) {
+      cb = opts;
+      opts = {};
     }
+    opts = Object.assign({}, options, opts);
     params = params || {};
     var tpl = uriTemplate.parse(endpoint + '{{{joinPath ../api.basePath ../resource.path action.path}}}');
     var pathParams = {};
@@ -36,13 +41,13 @@ module.exports = function (options) {
       method: '{{action.method}}',
       headers: {
         'Accept': 'application/json',
-        'Accept-Version': '{{../api.info.version}}'
+        'Accept-Version': '^{{../api.info.version}}'
       },{{#ne action.method 'GET'}}
       data: {},{{/ne}}
       params: { _actions: false, _links: true, _embedded: true }
     };
-    if (options.accessToken) {
-      req.headers['Authorization'] = 'Bearer ' + options.accessToken;
+    if (opts.accessToken) {
+      req.headers['Authorization'] = 'Bearer ' + opts.accessToken;
     }
     {{#definedParams ../api ../resource action}}
     {{{setParam .}}}
@@ -50,18 +55,10 @@ module.exports = function (options) {
     req.url = tpl.expand(pathParams);
     var promise = axios(req)
       .then(function (response) {
-        if (cb) { return cb(null, response.data); }
-        return response.data;
+        if (cb) { return cb(null, response); }
+        return response;
       })
-      .catch(function (response) {
-        var err;
-        if (response instanceof Error) {
-          err = response;
-        } else {
-          err = new Error(response.data.message);
-          err.type = response.data.type;
-          err.statusCode = response.status;
-        }
+      .catch(function (err) {
         if (cb) { return cb(err); }
         throw err;
       });

@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 var program = require('commander');
 var chalk = require('chalk');
-var main = require('../lib/main');
 
 program
   .version('0.1.0')
@@ -9,8 +8,12 @@ program
   .option('-v, --version [version]', 'Version of the API [*]', '*')
   .option('-l, --lang [lang]', 'Language of generated client [js]', 'js')
   .option('-o, --output <dir>', 'Output directory', '.')
+  .option('-d, --debug', 'Output debug information')
   .parse(process.argv);
 
+if (program.debug) { process.env.DEBUG = '*'; }
+
+var main = require('../lib/main');
 main({
   url: program.url,
   version: program.version,
