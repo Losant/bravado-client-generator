@@ -5,15 +5,31 @@
 ## {{../resourceName}}.{{actionName}}
 {{action.summary}}
 {{action.description}}
+{{#if action.deprecated}}**DEPRECATED**{{/if}}
 
 ### Parameters
+| Name | Type | Required | Description |
+| ---- | ---- | -------- | ----------- |
 {{#definedParams ../api ../resource action}}
-{{descParameter '- ' ../../options .}}
+{{parameterDoc ../../api .}}
 {{/definedParams}}
 
 ### Responses
+| Code | Type | Description |
+| ---- | ---- | ----------- |
 {{#each action.responses as |response code|}}
-{{descResponse '- ' ../../options code response}}
+{{#lt code 400}}
+{{responseDoc ../../api code response}}
+{{/lt}}
+{{/each}}
+
+### Errors
+| Code | Type | Description |
+| ---- | ---- | ----------- |
+{{#each action.responses as |response code|}}
+{{#gte code 400}}
+{{responseDoc  ../../api code response}}
+{{/gte}}
 {{/each}}
 
 ### Example
