@@ -3,11 +3,10 @@ var program = require('commander');
 var chalk = require('chalk');
 
 program
-  .version('0.1.0')
   .option('-u, --url <url>', 'URL to API spec')
   .option('-v, --version [version]', 'Version of the API [*]', '*')
   .option('-l, --lang [lang]', 'Language of generated client [js]', 'js')
-  .option('-o, --output <dir>', 'Output directory', '.')
+  .option('-o, --output <dir>', 'Output directory [cwd]', '.')
   .option('-d, --debug', 'Output debug information')
   .parse(process.argv);
 
