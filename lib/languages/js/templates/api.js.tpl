@@ -12,7 +12,7 @@ var axios = require('axios');
 module.exports = function (options) {
   options = options || {};
   var internals = {};
-  var endpoint = options.url || '{{options.url}}';
+  var endpoint = options.url || '{{options.root}}';
 
   {{#each api.resources as |resource name|}}
   internals.{{name}} = require('./{{name}}')(options, internals);

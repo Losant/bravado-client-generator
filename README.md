@@ -14,7 +14,8 @@ Usage: bravado-client-generator [options]
   Options:
 
     -h, --help               output usage information
-    -u, --url <url>          URL to API spec
+    -u, --url <url>          URL to fetch API spec from
+    -r, --root <url>         URL for root of generated code urls
     -v, --version [version]  Version of the API [*]
     -l, --lang [lang]        Language of generated client [js]
     -o, --output <dir>       Output directory [cwd]
