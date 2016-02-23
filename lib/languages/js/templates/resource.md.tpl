@@ -1,5 +1,5 @@
 # {{titleize resourceName}}
-{{api.info.title}} - v{{api.info.version}}
+{{api.info.title}}
 
 {{#each resource.actions as |action actionName|}}
 ## {{../resourceName}}.{{actionName}}

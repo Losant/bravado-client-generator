@@ -1,4 +1,4 @@
-# {{api.info.title}} - v{{api.info.version}}
+# {{api.info.title}}
 {{api.info.description}}
 
 ## Installation
