@@ -16,6 +16,7 @@ var client = api.createClient({
   accessToken: '...'
 });
 ```
+
 ## API Reference
 {{#each api.resources as |resource resourceName|}}
 - [{{titleize resourceName}}](docs/{{resourceName}}.md)
