@@ -1,4 +1,4 @@
-# {{api.info.title}} - v{{api.info.version}}
+# {{api.info.title}}
 {{api.info.description}}
 
 ## Installation
@@ -16,6 +16,7 @@ var client = api.createClient({
   accessToken: '...'
 });
 ```
+
 ## API Reference
 {{#each api.resources as |resource resourceName|}}
 - [{{titleize resourceName}}](docs/{{resourceName}}.md)

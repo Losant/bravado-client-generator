@@ -1,5 +1,5 @@
 # Schemas
-{{api.info.title}} - v{{api.info.version}}
+{{api.info.title}}
 
 {{#each api.definitions as |schema schemaName|}}
 ## {{schemaName}}
