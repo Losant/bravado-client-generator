@@ -22,7 +22,7 @@ main({
   output: program.output
 })
 .then(function () {
-  console.log('%s', chalk.bold.green('Success'))
+  console.log('%s', chalk.bold.green('Success'));
 })
 .catch(function (err) {
   console.log('%s: %s', chalk.bold.red('Error'), err.stack);
