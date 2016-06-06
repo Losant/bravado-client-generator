@@ -1,4 +1,5 @@
 var axios = require('axios');
+var qs    = require('qs');
 
 /**
  {{#if api.info.title}}
@@ -36,6 +37,7 @@ module.exports = function (options) {
       req.headers['Authorization'] = 'Bearer ' + opts.accessToken;
     }
     req.url = endpoint + req.url;
+    req.paramsSerializer = function(params) { return qs.stringify(params) };
     var promise = axios(req, cb)
       .then(function (response) {
         {{!--
