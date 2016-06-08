@@ -1,13 +1,19 @@
-# {{titleize resourceName}}
+# {{titleize resourceName}} Actions
 
-## Actions
+Details on the various actions that can be performed on the
+{{titleize resourceName}} resource, including the expected
+parameters and the potential responses.
+
+##### Contents
 
 {{#each resource.actions as |action actionName|}}
 *   [{{titleize actionName}}](#{{dasherize actionName}})
 {{/each}}
 {{#each resource.actions as |action actionName|}}
 
-### {{titleize actionName}}
+<br/>
+
+## {{titleize actionName}}
 
 {{#if action.summary}}
 {{trim action.summary}}
@@ -21,19 +27,29 @@
 **DEPRECATED**
 
 {{/if}}
+{{#if (hasParams ../api ../resource action false)}}
 ```ruby
 client.{{underscore ../resourceName}}.{{underscore actionName}}(params)
 ```
 
-#### Parameters
+#### Available Parameters
 
 | Name | Type | Required | Description |
 | ---- | ---- | -------- | ----------- |
-{{#definedParams ../api ../resource action}}
+{{#definedParams ../api ../resource action false}}
 {{parameterDoc ../../api .}}
 {{/definedParams}}
+{{else}}
+```ruby
+client.{{underscore ../resourceName}}.{{underscore actionName}}
+```
 
-#### Responses
+#### Available Parameters
+
+No parameters needed for this call.
+{{/if}}
+
+#### Successful Responses
 
 | Code | Type | Description |
 | ---- | ---- | ----------- |
@@ -43,7 +59,7 @@ client.{{underscore ../resourceName}}.{{underscore actionName}}(params)
 {{/lt}}
 {{/each}}
 
-#### Errors
+#### Error Responses
 
 | Code | Type | Description |
 | ---- | ---- | ----------- |

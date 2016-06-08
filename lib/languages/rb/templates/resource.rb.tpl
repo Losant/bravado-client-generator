@@ -20,7 +20,7 @@ module {{classify api.info.cleanTitle}}Rest
     #
     {{/if}}
     # Parameters:
-    {{#definedParams ../api ../resource action}}
+    {{#definedParams ../api ../resource action true}}
     # {{parameterComment ../../options .}}
     {{/definedParams}}
     #
@@ -38,17 +38,30 @@ module {{classify api.info.cleanTitle}}Rest
     {{/gte}}
     {{/each}}
     def {{underscore actionName}}(params = {})
+      params = Utils.symbolize_hash_keys(params)
       query_params = { _actions: false, _links: true, _embedded: true }
-      path_params = {}
       headers = {}
       body = nil
-      {{#definedParams ../api ../resource action}}
 
-{{{indent (setParam .) '      '}}}
+      {{#definedParams ../api ../resource action true}}
+      {{#if required}}
+      raise ArgumentError.new("{{name}} is required") unless params.has_key?(:{{name}})
+      {{/if}}
+      {{/definedParams}}
+
+      {{#definedParams ../api ../resource action true}}
+      {{#eq in "body"}}
+      body = params[:{{name}}] if params.has_key?(:{{name}})
+      {{/eq}}
+      {{#eq in "query"}}
+      query_params[:{{name}}] = params[:{{name}}] if params.has_key?(:{{name}})
+      {{/eq}}
+      {{#eq in "header"}}
+      headers[:{{name}}] = params[:{{name}}] if params.has_key?(:{{name}})
+      {{/eq}}
       {{/definedParams}}
 
       path = "{{{joinPath ../api.basePath ../resource.path action.path}}}"
-      path = path % path_params unless path_params.empty?
 
       @client.request(
         method: :{{lower action.method}},
