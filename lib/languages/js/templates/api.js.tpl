@@ -13,7 +13,6 @@ var qs    = require('qs');
 module.exports = function (options) {
   options = options || {};
   var internals = {};
-  var endpoint = options.url || '{{options.root}}';
 
   {{#stableObjEach api.resources as |resource name|}}
   internals.{{name}} = require('./{{name}}')(options, internals);
@@ -36,7 +35,7 @@ module.exports = function (options) {
     if (opts.accessToken) {
       req.headers.Authorization = 'Bearer ' + opts.accessToken;
     }
-    req.url = endpoint + req.url;
+    req.url = (opts.url || '{{options.root}}') + req.url;
     req.paramsSerializer = function(params) { return qs.stringify(params); };
     var promise = axios(req, cb)
       .then(function (response) {
