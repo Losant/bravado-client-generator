@@ -30,23 +30,18 @@ module.exports = function (options) {
     }
     opts = Object.assign({}, options, opts);
     req.headers = Object.assign({}, req.headers, {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Accept-Version': '^{{api.info.version}}'
     });
     if (opts.accessToken) {
-      req.headers['Authorization'] = 'Bearer ' + opts.accessToken;
+      req.headers.Authorization = 'Bearer ' + opts.accessToken;
     }
     req.url = endpoint + req.url;
-    req.paramsSerializer = function(params) { return qs.stringify(params) };
+    req.paramsSerializer = function(params) { return qs.stringify(params); };
     var promise = axios(req, cb)
       .then(function (response) {
-        {{!--
-        response = response.data._type && !options.raw ?
-          internals.Resource(response.data._type, response.data) :
-          response.data;
-        --}}
         response = response.data;
-        if (cb) { return setTimeout(function () { cb(null, response); }, 0) }
+        if (cb) { return setTimeout(function () { cb(null, response); }, 0); }
         return response;
       })
       .catch(function (response) {
@@ -58,7 +53,7 @@ module.exports = function (options) {
           err.type = response.data.type;
           err.statusCode = response.status;
         }
-        if (cb) { return setTimeout(function () { cb(err); }, 0) }
+        if (cb) { return setTimeout(function () { cb(err); }, 0); }
         throw err;
       });
     if (!cb) { return promise; }
@@ -78,24 +73,6 @@ module.exports = function (options) {
   internals.getOption = function (name) {
     return options[name];
   };
-{{!-
-  internals.Resource = function (type, data) {
-    var resource = {};
-    Object.keys(data).forEach(function (p) {
-      Object.defineProperty(resource, p, {
-        enumerable: true,
-        get: function () { return data[p]; }
-      });
-    });
-    Object.keys(internals[type]).forEach(function (a) {
-      resource[a] = function (params, cb) {
-        var p = Object.assign({}, params, resource)
-        return internals[type][a]
-      };
-    });
-    return resource;
-  };
---}}
 
   return internals;
 };

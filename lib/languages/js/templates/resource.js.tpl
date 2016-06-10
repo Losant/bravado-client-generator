@@ -1,4 +1,3 @@
-var axios = require('axios');
 var uriTemplate = require('uri-template');
 
 module.exports = function (options, client) {
@@ -57,7 +56,7 @@ module.exports = function (options, client) {
     {{/definedParams}}
     req.url = tpl.expand(pathParams);
     return client.request(req, opts, cb);
-  }
+  };
 
   {{/stableObjEach}}
   return internals;
