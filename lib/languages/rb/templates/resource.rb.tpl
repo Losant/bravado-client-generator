@@ -6,7 +6,7 @@ module {{classify api.info.cleanTitle}}Rest
     def initialize(client)
       @client = client
     end
-    {{#each resource.actions as |action actionName|}}
+    {{#stableObjEach resource.actions as |action actionName|}}
 
     {{#if action.deprecated}}
     # ** DEPRECATED **
@@ -25,18 +25,18 @@ module {{classify api.info.cleanTitle}}Rest
     {{/definedParams}}
     #
     # Responses:
-    {{#each action.responses as |response code|}}
+    {{#stableObjEach action.responses as |response code|}}
     {{#lt code 400}}
     # {{responseComment ../../options code response}}
     {{/lt}}
-    {{/each}}
+    {{/stableObjEach}}
     #
     # Errors:
-    {{#each action.responses as |response code|}}
+    {{#stableObjEach action.responses as |response code|}}
     {{#gte code 400}}
     # {{responseComment ../../options code response}}
     {{/gte}}
-    {{/each}}
+    {{/stableObjEach}}
     def {{underscore actionName}}(params = {})
       params = Utils.symbolize_hash_keys(params)
       query_params = { _actions: false, _links: true, _embedded: true }
@@ -70,7 +70,7 @@ module {{classify api.info.cleanTitle}}Rest
         headers: headers,
         body: body)
     end
-    {{/each}}
+    {{/stableObjEach}}
 
   end
 end

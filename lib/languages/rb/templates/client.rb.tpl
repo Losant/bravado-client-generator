@@ -16,12 +16,12 @@ module {{classify api.info.cleanTitle}}Rest
       self.url        = options.fetch(:url, "{{options.root}}")
     end
 
-    {{#each api.resources as |resource name|}}
+    {{#stableObjEach api.resources as |resource name|}}
     def {{underscore name}}
       @{{underscore name}} ||= {{classify name}}.new(self)
     end
 
-    {{/each}}
+    {{/stableObjEach}}
     def request(options = {})
       headers = options.fetch(:headers, {})
       method  = options.fetch(:method, :get)

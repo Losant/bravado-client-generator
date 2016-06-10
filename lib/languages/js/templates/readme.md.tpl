@@ -18,6 +18,6 @@ var client = api.createClient({
 ```
 
 ## API Reference
-{{#each api.resources as |resource resourceName|}}
+{{#stableObjEach api.resources as |resource resourceName|}}
 - [{{titleize resourceName}}](docs/{{resourceName}}.md)
-{{/each}}
+{{/stableObjEach}}

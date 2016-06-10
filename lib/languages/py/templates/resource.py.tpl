@@ -7,7 +7,7 @@ class {{classify resourceName}}(object):
     def __init__(self, client):
         self.client = client
 
-    {{#each resource.actions as |action actionName|}}
+    {{#stableObjEach resource.actions as |action actionName|}}
     def {{underscore actionName}}(self, **kwargs):
         """{{#if action.deprecated}} ** DEPRECATED **{{/if}}
         {{#if action.summary}}
@@ -19,23 +19,23 @@ class {{classify resourceName}}(object):
 
         {{/if}}
         Parameters:
-        {{#definedParams ../api ../resource action}}
+        {{#definedParams ../api ../resource action true}}
         {{parameterComment ../../options .}}
         {{/definedParams}}
 
         Responses:
-        {{#each action.responses as |response code|}}
+        {{#stableObjEach action.responses as |response code|}}
         {{#lt code 400}}
         {{responseComment ../../options code response}}
         {{/lt}}
-        {{/each}}
+        {{/stableObjEach}}
 
         Errors:
-        {{#each action.responses as |response code|}}
+        {{#stableObjEach action.responses as |response code|}}
         {{#gte code 400}}
         {{responseComment ../../options code response}}
         {{/gte}}
-        {{/each}}
+        {{/stableObjEach}}
         """
 
         query_params = {"_actions": "false", "_links": "true", "_embedded": "true"}
@@ -43,7 +43,7 @@ class {{classify resourceName}}(object):
         headers = {}
         body = None
 
-        {{#definedParams ../api ../resource action}}
+        {{#definedParams ../api ../resource action true}}
         {{{setParam .}}}
         {{/definedParams}}
 
@@ -51,4 +51,4 @@ class {{classify resourceName}}(object):
 
         return self.client.request("{{action.method}}", path, params=query_params, headers=headers, body=body)
 
-    {{/each}}
+    {{/stableObjEach}}

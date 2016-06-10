@@ -6,10 +6,10 @@ parameters and the potential responses.
 
 ##### Contents
 
-{{#each resource.actions as |action actionName|}}
-*   [{{titleize actionName}}](#{{dasherize actionName}})
-{{/each}}
-{{#each resource.actions as |action actionName|}}
+{{#stableObjEach resource.actions as |action actionName|}}
+*   [{{titleize actionName}}](#{{dasherize (titleize actionName)}})
+{{/stableObjEach}}
+{{#stableObjEach resource.actions as |action actionName|}}
 
 <br/>
 
@@ -27,23 +27,17 @@ parameters and the potential responses.
 **DEPRECATED**
 
 {{/if}}
-{{#if (hasParams ../api ../resource action false)}}
-```ruby
-client.{{underscore ../resourceName}}.{{underscore actionName}}(params)
-```
+{{{example ../api ../resourceName actionName}}}
 
+{{#if (hasParams ../api ../resource action false)}}
 #### Available Parameters
 
-| Name | Type | Required | Description |
-| ---- | ---- | -------- | ----------- |
+| Name | Type | Required | Description | Default |
+| ---- | ---- | -------- | ----------- | ------- |
 {{#definedParams ../api ../resource action false}}
 {{parameterDoc ../../api .}}
 {{/definedParams}}
 {{else}}
-```ruby
-client.{{underscore ../resourceName}}.{{underscore actionName}}
-```
-
 #### Available Parameters
 
 No parameters needed for this call.
@@ -53,19 +47,19 @@ No parameters needed for this call.
 
 | Code | Type | Description |
 | ---- | ---- | ----------- |
-{{#each action.responses as |response code|}}
+{{#stableObjEach action.responses as |response code|}}
 {{#lt code 400}}
 {{responseDoc ../../api code response}}
 {{/lt}}
-{{/each}}
+{{/stableObjEach}}
 
 #### Error Responses
 
 | Code | Type | Description |
 | ---- | ---- | ----------- |
-{{#each action.responses as |response code|}}
+{{#stableObjEach action.responses as |response code|}}
 {{#gte code 400}}
 {{responseDoc  ../../api code response}}
 {{/gte}}
-{{/each}}
-{{/each}}
+{{/stableObjEach}}
+{{/stableObjEach}}

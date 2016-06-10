@@ -1,9 +1,9 @@
 require_relative "{{lower api.info.cleanTitle}}_rest/version"
 require_relative "{{lower api.info.cleanTitle}}_rest/error"
 require_relative "{{lower api.info.cleanTitle}}_rest/utils"
-{{#each api.resources as |resource name|}}
+{{#stableObjEach api.resources as |resource name|}}
 require_relative "{{lower ../api.info.cleanTitle}}_rest/{{underscore name}}"
-{{/each}}
+{{/stableObjEach}}
 require_relative "{{lower api.info.cleanTitle}}_rest/client"
 
 module LosantRest

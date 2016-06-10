@@ -4,7 +4,7 @@ var uriTemplate = require('uri-template');
 module.exports = function (options, client) {
   var internals = {};
 
-  {{#each resource.actions as |action actionName|}}
+  {{#stableObjEach resource.actions as |action actionName|}}
   /**
    {{#if action.deprecated}}
    * ** DEPRECATED **
@@ -17,23 +17,23 @@ module.exports = function (options, client) {
    {{/if}}
    *
    * Parameters:
-   {{#definedParams ../api ../resource action}}
+   {{#definedParams ../api ../resource action true}}
    {{parameterComment ../../options .}}
    {{/definedParams}}
    *
    * Responses:
-   {{#each action.responses as |response code|}}
+   {{#stableObjEach action.responses as |response code|}}
    {{#lt code 400}}
    {{responseComment ../../options code response}}
    {{/lt}}
-   {{/each}}
+   {{/stableObjEach}}
    *
    * Errors:
-   {{#each action.responses as |response code|}}
+   {{#stableObjEach action.responses as |response code|}}
    {{#gte code 400}}
    {{responseComment ../../options code response}}
    {{/gte}}
-   {{/each}}
+   {{/stableObjEach}}
    */
   internals.{{actionName}} = function (params, opts, cb) {
     if ('function' === typeof params) {
@@ -52,13 +52,13 @@ module.exports = function (options, client) {
       data: {},{{/ne}}
       params: { _actions: false, _links: true, _embedded: true }
     };
-    {{#definedParams ../api ../resource action}}
+    {{#definedParams ../api ../resource action true}}
     {{{setParam .}}}
     {{/definedParams}}
     req.url = tpl.expand(pathParams);
     return client.request(req, opts, cb);
   }
 
-  {{/each}}
+  {{/stableObjEach}}
   return internals;
 };

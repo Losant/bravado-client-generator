@@ -2,9 +2,9 @@
 # pylint: disable=E0401
 
 import requests
-{{#each api.resources as |resource name|}}
+{{#stableObjEach api.resources as |resource name|}}
 from .{{underscore name}} import {{classify name}}
-{{/each}}
+{{/stableObjEach}}
 from .{{underscore api.info.cleanTitle}}_error import {{classify api.info.cleanTitle}}Error
 
 class Client(object):
@@ -21,9 +21,9 @@ class Client(object):
     def __init__(self, auth_token=None, url="{{options.root}}"):
         self.url = url
         self.auth_token = auth_token
-        {{#each api.resources as |resource name|}}
+        {{#stableObjEach api.resources as |resource name|}}
         self.{{underscore name}} = {{classify name}}(self)
-        {{/each}}
+        {{/stableObjEach}}
 
     def request(self, method, path, params=None, headers=None, body=None):
         """ Base method for making a {{api.info.title}} request """

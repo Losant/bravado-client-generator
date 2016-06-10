@@ -17,6 +17,7 @@
     "defaults": "^1.0.3",
     "fs-extra": "^0.26.2",
     "handlebars": "^4.0.4",
-    "inflection": "^1.7.2"
+    "inflection": "^1.7.2",
+    "json-refs": "^2.0.4"
   }
 }

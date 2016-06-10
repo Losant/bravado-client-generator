@@ -15,9 +15,9 @@ module.exports = function (options) {
   var internals = {};
   var endpoint = options.url || '{{options.root}}';
 
-  {{#each api.resources as |resource name|}}
+  {{#stableObjEach api.resources as |resource name|}}
   internals.{{name}} = require('./{{name}}')(options, internals);
-  {{/each}}
+  {{/stableObjEach}}
 
   /**
    * Make a generic request to the API
@@ -70,6 +70,13 @@ module.exports = function (options) {
   internals.setOption = function (name, value) {
     options[name] = value;
     return internals;
+  };
+
+  /**
+   * Get a client option
+   */
+  internals.getOption = function (name) {
+    return options[name];
   };
 {{!-
   internals.Resource = function (type, data) {
