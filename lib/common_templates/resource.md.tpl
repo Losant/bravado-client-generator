@@ -32,8 +32,8 @@ parameters and the potential responses.
 {{#if (hasParams ../api ../resource action false)}}
 #### Available Parameters
 
-| Name | Type | Required | Description | Default |
-| ---- | ---- | -------- | ----------- | ------- |
+| Name | Type | Required | Description | Default | Example |
+| ---- | ---- | -------- | ----------- | ------- | ------- |
 {{#definedParams ../api ../resource action false}}
 {{parameterDoc ../../api .}}
 {{/definedParams}}
