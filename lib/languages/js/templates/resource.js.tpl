@@ -49,6 +49,7 @@ module.exports = function (options, client) {
     var req = {
       method: '{{action.method}}',{{#ne action.method 'GET'}}
       data: {},{{/ne}}
+      headers: {},
       params: { _actions: false, _links: true, _embedded: true }
     };
     {{#definedParams ../api ../resource action true}}
