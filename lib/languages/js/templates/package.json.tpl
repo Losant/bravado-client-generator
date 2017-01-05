@@ -1,7 +1,7 @@
 {
-  "name": "{{dasherize api.info.title}}-js",
-  "version": "{{api.info.version}}",
-  "description": "{{api.info.description}}",
+  "name": "{{{dasherize api.info.title}}}-js",
+  "version": "{{{api.info.version}}}",
+  "description": "{{{api.info.description}}}",
   "main": "lib/index.js",
   "dependencies": {
     "axios": "^0.12.0",

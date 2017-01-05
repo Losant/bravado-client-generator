@@ -3,19 +3,19 @@ var qs    = require('qs');
 
 /**
  {{#if api.info.title}}
- * {{api.info.title}}
+ * {{{api.info.title}}}
  {{/if}}
  {{#if api.info.description}}
- * {{api.info.description}}
+ * {{{api.info.description}}}
  {{/if}}
- * version: {{api.info.version}}
+ * version: {{{api.info.version}}}
  */
 module.exports = function (options) {
   options = options || {};
   var internals = {};
 
   {{#stableObjEach api.resources as |resource name|}}
-  internals.{{name}} = require('./{{name}}')(options, internals);
+  internals.{{{name}}} = require('./{{{name}}}')(options, internals);
   {{/stableObjEach}}
 
   /**
@@ -30,12 +30,12 @@ module.exports = function (options) {
     opts = Object.assign({}, options, opts);
     req.headers = Object.assign({}, req.headers, {
       Accept: 'application/json',
-      'Accept-Version': '^{{api.info.version}}'
+      'Accept-Version': '^{{{api.info.version}}}'
     });
     if (opts.accessToken) {
       req.headers.Authorization = 'Bearer ' + opts.accessToken;
     }
-    req.url = (opts.url || '{{options.root}}') + req.url;
+    req.url = (opts.url || '{{{options.root}}}') + req.url;
     req.paramsSerializer = function(params) { return qs.stringify(params); };
     var promise = axios(req, cb)
       .then(function (response) {
