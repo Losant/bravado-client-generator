@@ -1,3 +1,7 @@
+{{#if options.license}}
+{{{commentify options.license}}}
+
+{{/if}}
 module {{{classify api.info.cleanTitle}}}Rest
   class Utils
     def self.symbolize_hash_keys(hash)

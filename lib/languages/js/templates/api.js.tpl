@@ -1,3 +1,7 @@
+{{#if options.license}}
+{{{commentify options.license}}}
+
+{{/if}}
 var axios = require('axios');
 var qs    = require('qs');
 

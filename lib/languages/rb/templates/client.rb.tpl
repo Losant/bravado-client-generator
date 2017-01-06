@@ -1,3 +1,7 @@
+{{#if options.license}}
+{{{commentify options.license}}}
+
+{{/if}}
 require "httparty"
 
 module {{{classify api.info.cleanTitle}}}Rest

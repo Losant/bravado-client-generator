@@ -1,3 +1,7 @@
+{{#if options.license}}
+{{{commentify options.license}}}
+
+{{/if}}
 require_relative "{{{lower api.info.cleanTitle}}}_rest/version"
 require_relative "{{{lower api.info.cleanTitle}}}_rest/error"
 require_relative "{{{lower api.info.cleanTitle}}}_rest/utils"
@@ -6,7 +10,7 @@ require_relative "{{{lower ../api.info.cleanTitle}}}_rest/{{{underscore name}}}"
 {{/stableObjEach}}
 require_relative "{{{lower api.info.cleanTitle}}}_rest/client"
 
-module LosantRest
+module {{{classify api.info.cleanTitle}}}Rest
 
   def self.client
     @client ||= Client.new

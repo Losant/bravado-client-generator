@@ -1,3 +1,7 @@
+{{#if options.license}}
+{{{commentify options.license}}}
+
+{{/if}}
 module {{{classify api.info.cleanTitle}}}Rest
   class ResponseError < StandardError
     attr_reader :code

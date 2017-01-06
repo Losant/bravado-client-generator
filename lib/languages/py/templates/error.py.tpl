@@ -1,3 +1,7 @@
+{{#if options.license}}
+{{{commentify options.license}}}
+
+{{/if}}
 """ Module containing the {{{classify api.info.cleanTitle}}}Error class """
 
 class {{{classify api.info.cleanTitle}}}Error(Exception):

@@ -1,3 +1,7 @@
+{{#if options.license}}
+{{{commentify options.license}}}
+
+{{/if}}
 """ Module for {{{api.info.title}}} Client class """
 # pylint: disable=E0401
 

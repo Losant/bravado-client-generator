@@ -1,3 +1,7 @@
+{{#if options.license}}
+{{{commentify options.license}}}
+
+{{/if}}
 var uriTemplate = require('uri-template');
 
 module.exports = function (options, client) {

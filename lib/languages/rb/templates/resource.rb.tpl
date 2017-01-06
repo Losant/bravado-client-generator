@@ -1,3 +1,7 @@
+{{#if options.license}}
+{{{commentify options.license}}}
+
+{{/if}}
 module {{{classify api.info.cleanTitle}}}Rest
 
   # Class containing all the actions for the {{{titleize resourceName}}} Resource
