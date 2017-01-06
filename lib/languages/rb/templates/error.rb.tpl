@@ -1,4 +1,4 @@
-module {{classify api.info.cleanTitle}}Rest
+module {{{classify api.info.cleanTitle}}}Rest
   class ResponseError < StandardError
     attr_reader :code
     attr_reader :type

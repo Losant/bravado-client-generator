@@ -1,4 +1,4 @@
-module {{classify api.info.cleanTitle}}Rest
+module {{{classify api.info.cleanTitle}}}Rest
   class Utils
     def self.symbolize_hash_keys(hash)
       Hash[hash.dup.map { |k, v| [k.to_sym, v] }]

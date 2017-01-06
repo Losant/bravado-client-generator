@@ -1,24 +1,24 @@
 require "httparty"
 
-module {{classify api.info.cleanTitle}}Rest
-  # {{api.info.title}}
+module {{{classify api.info.cleanTitle}}}Rest
+  # {{{api.info.title}}}
   {{#if api.info.description}}
   #
-  # {{api.info.description}}
+  # {{{api.info.description}}}
   {{/if}}
   #
-  # Built For Version {{api.info.version}}
+  # Built For Version {{{api.info.version}}}
   class Client
     attr_accessor :auth_token, :url
 
     def initialize(options = {})
       self.auth_token = options.fetch(:auth_token, nil)
-      self.url        = options.fetch(:url, "{{options.root}}")
+      self.url        = options.fetch(:url, "{{{options.root}}}")
     end
 
     {{#stableObjEach api.resources as |resource name|}}
-    def {{underscore name}}
-      @{{underscore name}} ||= {{classify name}}.new(self)
+    def {{{underscore name}}}
+      @{{{underscore name}}} ||= {{{classify name}}}.new(self)
     end
 
     {{/stableObjEach}}
@@ -28,7 +28,7 @@ module {{classify api.info.cleanTitle}}Rest
 
       headers["Accept"]         = "application/json"
       headers["Content-Type"]   = "application/json"
-      headers["Accept-Version"] = "^{{api.info.version}}"
+      headers["Accept-Version"] = "^{{{api.info.version}}}"
       headers["Authorization"]  = "Bearer #{self.auth_token}" if self.auth_token
       path = self.url + options.fetch(:path, "")
 
