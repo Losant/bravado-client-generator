@@ -7,9 +7,7 @@ Below are the various requests that can be performed against the
 parameters and the potential responses.
 
 {{#stableObjEach resource.actions as |action actionName|}}
-## {{upper action.method}}{{#if action.path}} - {{action.path}}{{/if}}
-
-{{{../options.root}}}{{{joinPath ../api.basePath ../resource.path action.path}}}
+## {{titleize actionName}}
 
 {{#if action.summary}}
 {{trim action.summary}}
@@ -23,6 +21,19 @@ parameters and the potential responses.
 **DEPRECATED**
 
 {{/if}}
+#### Method And Url
+
+{{upper action.method}} {{{../options.root}}}{{{joinPath ../api.basePath ../resource.path action.path}}}
+
+#### Authentication
+{{#if (hasAuthScopes ../api ../resource action)}}
+A valid api access token is required to access this endpoint. The token must
+include at least one of the following scopes:
+{{arrayToTextList (validAuthScopes ../api ../resource action)}}.
+{{else}}
+No authentication is required for this endpoint.
+{{/if}}
+
 {{#if (hasParamType ../api ../resourceName actionName "path")}}
 #### Request Path Components
 
@@ -52,9 +63,9 @@ parameters and the potential responses.
 
 | Name | Required | Description | Default |
 | ---- | -------- | ----------- | ------- |
-{{#ne resourceName "auth"}}
+{{#if (hasAuthScopes ../api ../resource action)}}
 | Authorization | Y | The token for authenticating the request, prepended with Bearer | |
-{{/ne}}
+{{/if}}
 {{#definedParams ../api ../resource action false}}
 {{#eq in "header"}}
 {{queryParamDoc ../../api .}}
@@ -84,9 +95,9 @@ valid body for this request:
 ```bash
 curl -H 'Content-Type: application/json' \
     -H 'Accept: application/json' \
-{{#ne ../resourceName "auth"}}
-    -H 'Authorization: Bearer YOUR_AUTH_TOKEN' \
-{{/ne}}
+{{#if (hasAuthScopes ../api ../resource action)}}
+    -H 'Authorization: Bearer YOUR_API_ACCESS_TOKEN' \
+{{/if}}
     -X {{upper action.method}} \
 {{{generateCurlExample ../api ../resourceName actionName}}}
 ```

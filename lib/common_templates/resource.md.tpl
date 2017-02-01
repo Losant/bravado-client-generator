@@ -29,6 +29,15 @@ parameters and the potential responses.
 {{/if}}
 {{{example ../api ../resourceName actionName}}}
 
+#### Authentication
+{{#if (hasAuthScopes ../api ../resource action)}}
+The client must be configured with a valid api access token to call this
+action. The token must include at least one of the following scopes:
+{{arrayToTextList (validAuthScopes ../api ../resource action)}}.
+{{else}}
+No api access token is required to call this action.
+{{/if}}
+
 {{#if (hasParams ../api ../resource action false)}}
 #### Available Parameters
 

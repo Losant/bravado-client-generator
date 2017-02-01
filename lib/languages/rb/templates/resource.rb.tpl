@@ -23,6 +23,16 @@ module {{{classify api.info.cleanTitle}}}Rest
     # {{{trim action.description}}}
     #
     {{/if}}
+    # Authentication:
+    {{#if (hasAuthScopes ../api ../resource action)}}
+    # The client must be configured with a valid api
+    # access token to call this action. The token
+    # must include at least one of the following scopes:
+    # {{arrayToTextList (validAuthScopes ../api ../resource action)}}.
+    {{else}}
+    # No api access token is required to call this action.
+    {{/if}}
+    #
     # Parameters:
     {{#definedParams ../api ../resource action true}}
     # {{{parameterComment ../../options .}}}
