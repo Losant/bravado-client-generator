@@ -39,6 +39,9 @@ module.exports = function (options) {
     if (opts.accessToken) {
       req.headers.Authorization = 'Bearer ' + opts.accessToken;
     }
+    if (opts.timeout) {
+      req.timeout = opts.timeout;
+    }
     req.url = (opts.url || '{{{options.root}}}') + req.url;
     req.paramsSerializer = function(params) { return qs.stringify(params); };
     var promise = axios(req, cb)
