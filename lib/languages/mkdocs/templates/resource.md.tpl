@@ -79,7 +79,7 @@ No authentication is required for this endpoint.
 {{#definedParams ../api ../resource action false}}
 {{#eq in "body"}}
 The body of the request should be serialized JSON that validates against
-the {{paramSchemaLink ../../api .}} schema.  For example, the following would be a
+the {{paramSchemaLink ../../api .}} schema. For example, the following would be a
 valid body for this request:
 
 ```json
@@ -119,7 +119,7 @@ curl -H 'Content-Type: application/json' \
 | ---- | ---- | ----------- |
 {{#stableObjEach action.responses as |response code|}}
 {{#gte code 400}}
-{{responseDoc  ../../api code response}}
+{{responseDoc ../../api code response}}
 {{/gte}}
 {{/stableObjEach}}
 

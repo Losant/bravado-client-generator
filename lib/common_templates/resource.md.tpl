@@ -68,7 +68,7 @@ No parameters needed for this call.
 | ---- | ---- | ----------- |
 {{#stableObjEach action.responses as |response code|}}
 {{#gte code 400}}
-{{responseDoc  ../../api code response}}
+{{responseDoc ../../api code response}}
 {{/gte}}
 {{/stableObjEach}}
 {{/stableObjEach}}
