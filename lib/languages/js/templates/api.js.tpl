@@ -42,6 +42,9 @@ module.exports = function (options) {
     if (opts.timeout) {
       req.timeout = opts.timeout;
     }
+    if (opts.acceptVersion) {
+      req.headers['Accept-Version'] = opts.acceptVersion;
+    }
     req.url = (opts.url || '{{{options.root}}}') + req.url;
     req.paramsSerializer = function(params) { return qs.stringify(params); };
     var promise = axios(req, cb)
