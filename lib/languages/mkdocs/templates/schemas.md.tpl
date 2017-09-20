@@ -1,3 +1,5 @@
+description: A comprehensive list of the JSON schemas defining the objects expected by and returned from the {{{api.info.title}}}. Learn More.
+
 # Schemas
 
 {{#stableObjEach api.schemaMap as |wrap defPath|}}

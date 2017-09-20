@@ -1,3 +1,5 @@
+description: A detailed look at the various REST actions supported by the {{titleize resourceName}} resource of the {{{api.info.title}}}. Learn more.
+
 # {{titleize resourceName}} Actions
 
 {{{options.root}}}{{{joinPath api.basePath resource.path ''}}}
