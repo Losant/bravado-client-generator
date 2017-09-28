@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "axios": "^0.7.0",
+    "axios": "^0.12.0",
     "chalk": "^1.1.1",
     "commander": "^2.9.0",
     "debug": "^2.2.0",
@@ -19,7 +19,8 @@
     "handlebars": "^4.0.4",
     "inflection": "^1.7.2",
     "json-refs": "^2.0.4",
-    "qs": "^6.2.0",
-    "lodash": "^4.17.4"
+    "qs": "^6.4.0",
+    "lodash": "^4.17.4",
+    "uri-template": "^1.0.1"
   }
 }
