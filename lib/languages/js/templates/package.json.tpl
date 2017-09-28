@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "dependencies": {
     "axios": "^0.12.0",
-    "uri-template": "^1.0.0",
-    "qs": "^6.2.0"
+    "uri-template": "^1.0.1",
+    "qs": "^6.4.0"
   }
 }
