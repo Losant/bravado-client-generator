@@ -7,8 +7,8 @@ description: A detailed look at the various REST actions supported by the {{titl
 Below are the various requests that can be performed against the
 {{titleize resourceName}} resource, as well as the expected
 parameters and the potential responses.
-
 {{#stableObjEach resource.actions as |action actionName|}}
+
 ## {{titleize actionName}}
 
 {{#if action.summary}}
@@ -23,11 +23,12 @@ parameters and the potential responses.
 **DEPRECATED**
 
 {{/if}}
-#### Method And Url
+### Method And Url <a name="{{actionName}}-method-url"></a>
 
 {{upper action.method}} {{{../options.root}}}{{{joinPath ../api.basePath ../resource.path action.path}}}
 
-#### Authentication
+### Authentication <a name="{{actionName}}-authentication"></a>
+
 {{#if (hasAuthScopes ../api ../resource action)}}
 A valid api access token is required to access this endpoint. The token must
 include at least one of the following scopes:
@@ -37,7 +38,7 @@ No authentication is required for this endpoint.
 {{/if}}
 
 {{#if (hasParamType ../api ../resourceName actionName "path")}}
-#### Request Path Components
+### Request Path Components <a name="{{actionName}}-path-components"></a>
 
 | Path Component | Description | Example |
 | -------------- | ----------- | ------- |
@@ -49,7 +50,7 @@ No authentication is required for this endpoint.
 
 {{/if}}
 {{#if (hasParamType ../api ../resourceName actionName "query")}}
-#### Request Query Parameters
+### Request Query Parameters <a name="{{actionName}}-query-params"></a>
 
 | Name | Required | Description | Default | Example |
 | ---- | -------- | ----------- | ------- | ------- |
@@ -61,7 +62,7 @@ No authentication is required for this endpoint.
 
 {{/if}}
 {{#if (hasParamType ../api ../resourceName actionName "header")}}
-#### Request Headers
+### Request Headers <a name="{{actionName}}-headers"></a>
 
 | Name | Required | Description | Default |
 | ---- | -------- | ----------- | ------- |
@@ -76,7 +77,7 @@ No authentication is required for this endpoint.
 
 {{/if}}
 {{#if (hasParamType ../api ../resourceName actionName "body")}}
-#### Request Body
+### Request Body <a name="{{actionName}}-body"></a>
 
 {{#definedParams ../api ../resource action false}}
 {{#eq in "body"}}
@@ -87,12 +88,11 @@ valid body for this request:
 ```json
 {{{json (exampleForParam ../../api .)}}}
 ```
-<small><br/></small>
+
 {{/eq}}
 {{/definedParams}}
-
 {{/if}}
-#### Curl Example
+### Curl Example <a name="{{actionName}}-curl-example"></a>
 
 ```bash
 curl -H 'Content-Type: application/json' \
@@ -103,9 +103,8 @@ curl -H 'Content-Type: application/json' \
     -X {{upper action.method}} \
 {{{generateCurlExample ../api ../resourceName actionName}}}
 ```
-<br/>
 
-#### Successful Responses
+### Successful Responses <a name="{{actionName}}-successful-responses"></a>
 
 | Code | Type | Description |
 | ---- | ---- | ----------- |
@@ -115,7 +114,7 @@ curl -H 'Content-Type: application/json' \
 {{/lt}}
 {{/stableObjEach}}
 
-#### Error Responses
+### Error Responses <a name="{{actionName}}-error-responses"></a>
 
 | Code | Type | Description |
 | ---- | ---- | ----------- |
@@ -124,7 +123,4 @@ curl -H 'Content-Type: application/json' \
 {{responseDoc ../../api code response}}
 {{/gte}}
 {{/stableObjEach}}
-
-<br/>
-
 {{/stableObjEach}}
