@@ -61,6 +61,9 @@ module.exports = function (options) {
           err = new Error(response.data.message);
           err.type = response.data.type;
           err.statusCode = response.status;
+          if(err.retryIn){
+            err.retryIn = response.retryIn;
+          }
         }
         if (cb) { return setTimeout(function () { cb(err); }, 0); }
         throw err;
