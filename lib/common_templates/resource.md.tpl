@@ -7,9 +7,12 @@ parameters and the potential responses.
 ##### Contents
 
 {{#stableObjEach resource.actions as |action actionName|}}
+{{#unless action.sseStream}}
 *   [{{titleize actionName}}](#{{dasherize (titleize actionName)}})
+{{/unless}}
 {{/stableObjEach}}
 {{#stableObjEach resource.actions as |action actionName|}}
+{{#unless action.sseStream}}
 
 <br/>
 
@@ -71,4 +74,5 @@ No parameters needed for this call.
 {{responseDoc ../../api code response}}
 {{/gte}}
 {{/stableObjEach}}
+{{/unless}}
 {{/stableObjEach}}

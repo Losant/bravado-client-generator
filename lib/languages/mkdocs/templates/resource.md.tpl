@@ -104,6 +104,21 @@ curl -H 'Content-Type: application/json' \
 {{{generateCurlExample ../api ../resourceName actionName}}}
 ```
 
+{{#if action.sseStream}}
+### SSE Stream for a Successful Response  <a name="{{actionName}}-successful-responses"></a>
+
+{{#stableObjEach action.responses as |response code|}}
+{{#eq code '200'}}
+{{ response.description }}
+
+| SSE Event Name | Type | Description |
+| -------------- | ---- | ----------- |
+{{#stableObjEach response.sseEvents as |eventInfo eventName|}}
+{{sseResponseDoc ../../../api eventName eventInfo}}
+{{/stableObjEach}}
+{{/eq}}
+{{/stableObjEach}}
+{{else}}
 ### Successful Responses <a name="{{actionName}}-successful-responses"></a>
 
 | Code | Type | Description |
@@ -113,6 +128,7 @@ curl -H 'Content-Type: application/json' \
 {{responseDoc ../../api code response}}
 {{/lt}}
 {{/stableObjEach}}
+{{/if}}
 
 ### Error Responses <a name="{{actionName}}-error-responses"></a>
 

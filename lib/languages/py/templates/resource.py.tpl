@@ -12,6 +12,7 @@ class {{{classify resourceName}}}(object):
         self.client = client
 
     {{#stableObjEach resource.actions as |action actionName|}}
+    {{#unless action.sseStream}}
     def {{{underscore actionName}}}(self, **kwargs):
         """{{#if action.deprecated}} ** DEPRECATED **{{/if}}
         {{#if action.summary}}
@@ -65,4 +66,5 @@ class {{{classify resourceName}}}(object):
 
         return self.client.request("{{{action.method}}}", path, params=query_params, headers=headers, body=body)
 
+    {{/unless}}
     {{/stableObjEach}}

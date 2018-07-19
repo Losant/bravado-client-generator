@@ -8,6 +8,7 @@ module.exports = function (options, client) {
   var internals = {};
 
   {{#stableObjEach resource.actions as |action actionName|}}
+  {{#unless action.sseStream}}
   /**
    {{#if action.deprecated}}
    * ** DEPRECATED **
@@ -73,6 +74,7 @@ module.exports = function (options, client) {
     return client.request(req, opts, cb);
   };
 
+  {{/unless}}
   {{/stableObjEach}}
   return internals;
 };
