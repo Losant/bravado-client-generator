@@ -13,7 +13,7 @@ class {{{classify resourceName}}}(object):
 
     {{#stableObjEach resource.actions as |action actionName|}}
     {{#unless action.sseStream}}
-    def {{{underscore actionName}}}(self, **kwargs):
+    def {{{pythonActionName actionName}}}(self, **kwargs):
         """{{#if action.deprecated}} ** DEPRECATED **{{/if}}
         {{#if action.summary}}
         {{{trim action.summary}}}
