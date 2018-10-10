@@ -76,5 +76,81 @@ module.exports = function (options, client) {
 
   {{/unless}}
   {{/stableObjEach}}
+  {{#stableObjEach resource.actions as |action actionName|}}
+  {{#if action.sseStream}}
+  /**
+   {{#if action.deprecated}}
+   * ** DEPRECATED **
+   {{/if}}
+   {{#if action.summary}}
+   * {{{action.summary}}}
+   {{/if}}
+   {{#if action.description}}
+   * {{{action.description}}}
+   {{/if}}
+   *
+   * Authentication:
+   {{#if (hasAuthScopes ../api ../resource action)}}
+   * The client must be configured with a valid api
+   * access token to call this action. The token
+   * must include at least one of the following scopes:
+   * {{arrayToTextList (validAuthScopes ../api ../resource action)}}.
+   {{else}}
+   * No api access token is required to call this action.
+   {{/if}}
+   *
+   * Parameters:
+   {{#definedParams ../api ../resource action true true}}
+   {{{parameterComment ../../options .}}}
+   {{/definedParams}}
+   *
+   * Returns a Promise for (or calls the provided callback with)
+   * an EventSource instance, which will be an
+   {{#stableObjEach action.responses as |response code|}}
+   {{#eq code '200'}}
+   * {{ response.description }}
+   *
+   * It will have the following message event types:
+   {{#stableObjEach response.sseEvents as |eventInfo eventName|}}
+   {{sseResponseComment ../../../options eventName eventInfo}}
+   {{/stableObjEach}}
+   {{/eq}}
+   {{/stableObjEach}}
+   *
+   * See https://developer.mozilla.org/en-US/docs/Web/API/EventSource
+   * for more information about EventSource instances.
+   *
+   * Possible Errors:
+   {{#stableObjEach action.responses as |response code|}}
+   {{#gte code 400}}
+   {{{responseComment ../../options code response}}}
+   {{/gte}}
+   {{/stableObjEach}}
+   */
+  internals.{{{actionName}}} = function (params, opts, cb) {
+    if ('function' === typeof params) {
+      cb = params;
+      params = {};
+      opts = {};
+    } else if ('function' === typeof opts) {
+      cb = opts;
+      opts = {};
+    }
+    params = params || {};
+    var tpl = uriTemplate.parse('{{{joinPath ../api.basePath ../resource.path action.path}}}');
+    var pathParams = {};
+    var req = {
+      headers: {},
+      params: {}
+    };
+    {{#definedParams ../api ../resource action true true}}
+    {{{setParam .}}}
+    {{/definedParams}}
+    req.url = tpl.expand(pathParams);
+    return client.attachEventSource(req, opts, cb);
+  };
+
+  {{/if}}
+  {{/stableObjEach}}
   return internals;
 };
