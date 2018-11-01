@@ -5,7 +5,7 @@
 var axios = require('axios');
 var qs = require('qs');
 var EventSource = require('eventsource');
-var Promise = require('es6-promise').Promise;
+var EsPromise = require('es6-promise');
 
 /**
  {{#if api.info.title}}
@@ -88,13 +88,13 @@ module.exports = function (options) {
     if (opts.acceptVersion) {
       req.headers['Accept-Version'] = opts.acceptVersion;
     }
-    var fullUrl = (opts.url || '{{{options.root}}}') + req.url + '?' + qs.stringify(req.params)
+    var fullUrl = (opts.url || '{{{options.root}}}') + req.url + '?' + qs.stringify(req.params);
 
     var es = new EventSource(fullUrl, { headers: req.headers });
 
-    var promise = new Promise(function(resolve, reject) {
-      es.onopen = function(){ resolve(); }
-      es.onerror = function(err){ reject(err); }
+    var promise = new EsPromise.Promise(function(resolve, reject) {
+      es.onopen = function(){ resolve(); };
+      es.onerror = function(err){ reject(err); };
     })
       .then(function(){
         es.onopen = null;
@@ -103,14 +103,18 @@ module.exports = function (options) {
         return es;
       })
       .catch(function (err) {
-        try{ es.close(); }catch(e){ }
+        try {
+          es.close();
+        } catch (e) {
+          // Empty
+        }
         es.onopen = null;
         es.onerror = null;
         if (cb) { return setTimeout(function () { cb(err); }, 0); }
         throw err;
       });
     if (!cb) { return promise; }
-  }
+  };
 
   /**
    * Set a client option
