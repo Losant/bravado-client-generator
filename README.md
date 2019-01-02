@@ -1,14 +1,18 @@
 # Bravado API Client Generator
+
 Generates a client modules for easily interacting with Bravado based APIs.
 
 ## Installation
+
 To install the module via NPM:
+
 ```bash
-$ npm install -g bravado-client-generator
+npm install -g bravado-client-generator
 ```
 
 ## Usage
-```
+
+```bash
 Usage: bravado-client-generator [options]
 
   Options:
