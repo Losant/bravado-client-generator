@@ -48,7 +48,7 @@ module.exports = function (options) {
     if (opts.acceptVersion) {
       req.headers['Accept-Version'] = opts.acceptVersion;
     }
-    if(opts.multipart){
+    if (opts.multipart) {
       var data = req.data || {};
       req.data = new FormData();
       Object.keys(data).forEach(function(key) {

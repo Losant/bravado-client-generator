@@ -59,8 +59,8 @@ module.exports = function (options, client) {
       opts = {};
     } else if (!opts) {
       opts = {};
-    }
-    {{#if (isMultipart action.params)}}opts.multipart = true;{{/if}}
+    }{{#if (isMultipart action.params)}}
+    opts.multipart = true;{{/if}}
     params = params || {};
     var tpl = uriTemplate.parse('{{{joinPath ../api.basePath ../resource.path action.path}}}');
     var pathParams = {};
