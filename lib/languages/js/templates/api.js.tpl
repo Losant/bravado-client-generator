@@ -54,7 +54,9 @@ module.exports = function (options) {
       Object.keys(data).forEach(function(key) {
         req.data.append(key, data[key]);
       });
-      req.headers = Object.assign(req.data.getHeaders(), req.headers);
+      if (req.data.getHeaders) {
+        req.headers = Object.assign(req.data.getHeaders(), req.headers);
+      }
     }
     req.url = (opts.url || '{{{options.root}}}') + req.url;
     req.paramsSerializer = function(params) { return qs.stringify(params); };
