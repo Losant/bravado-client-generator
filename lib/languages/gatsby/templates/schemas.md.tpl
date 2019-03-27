@@ -21,5 +21,5 @@ description: A comprehensive list of the JSON schemas defining the objects expec
 {{{json wrap.example}}}
 ```
 
-
+<br/>
 {{/stableObjEach}}
