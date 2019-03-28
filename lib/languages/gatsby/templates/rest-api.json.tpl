@@ -7,6 +7,6 @@
     {{#each resources}}
       { "name": "{{this}}", "url": "/rest-api/{{dasherize this}}/" },
     {{/each}}
-      { "name": "Schema", "url": "/rest-api/schema/" }
+      { "name": "Schemas", "url": "/rest-api/schemas/" }
   ]
 }
