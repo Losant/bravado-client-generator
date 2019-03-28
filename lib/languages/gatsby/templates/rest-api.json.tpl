@@ -3,8 +3,10 @@
   "icon": "NAV_API_TOKENS",
   "order": 14,
   "links": [
-    {{#stableObjEach resources as |wrap defPath|}}
-      { "name": "{{titleize wrap}}", "url": "/rest-api/{{dasherizeAndTitleize wrap}}/" },
-    {{/stableObjEach}}
+      { "name": "Overview", "url": "/rest-api/overview/" },
+    {{#each resources}}
+      { "name": "{{this}}", "url": "/rest-api/{{dasherize this}}/" },
+    {{/each}}
+      { "name": "Schema", "url": "/rest-api/schema/" }
   ]
 }
