@@ -95,10 +95,24 @@ valid body for this request:
 {{/eq}}
 {{/definedParams}}
 {{/if}}
+{{#if (hasParamType ../api ../resourceName actionName "multipart")}}
+### Request Body <a name="{{actionName}}-body"></a>
+
+{{#definedParams ../api ../resource action false}}
+{{#eq in "multipart"}}
+The body of the request should be a [multipart form data](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST) post where `{{name}}` is {{ lower description}}.
+
+{{/eq}}
+{{/definedParams}}
+{{/if}}
 ### Curl Example <a name="{{actionName}}-curl-example"></a>
 
 ```bash
+{{#if (hasParamType ../api ../resourceName actionName "multipart")}}
+curl -H 'Content-Type: multipart/form-data' \
+{{else}}
 curl -H 'Content-Type: application/json' \
+{{/if}}
     -H 'Accept: application/json' \
 {{#if (hasAuthScopes ../api ../resource action)}}
     -H 'Authorization: Bearer YOUR_API_ACCESS_TOKEN' \
