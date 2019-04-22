@@ -1,4 +1,5 @@
 ---
+category: Rest API
 description: A comprehensive list of the JSON schemas defining the objects expected by and returned from the {{{api.info.title}}}. Learn More.
 ---
 
@@ -21,5 +22,4 @@ description: A comprehensive list of the JSON schemas defining the objects expec
 {{{json wrap.example}}}
 ```
 
-<br/>
 {{/stableObjEach}}
