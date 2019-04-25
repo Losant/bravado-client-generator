@@ -11,7 +11,8 @@ module {{{classify api.info.cleanTitle}}}Rest
       @client = client
     end
     {{#stableObjEach resource.actions as |action actionName|}}
-    {{#unless action.sseStream}}
+    {{#unless action.sseStream ~}}
+    {{#unless (isMultipart action.params)}}
 
     {{#if action.deprecated}}
     # ** DEPRECATED **
@@ -85,7 +86,8 @@ module {{{classify api.info.cleanTitle}}}Rest
         headers: headers,
         body: body)
     end
-    {{/unless}}
+    {{/unless ~}}
+    {{/unless ~}}
     {{/stableObjEach}}
 
   end
