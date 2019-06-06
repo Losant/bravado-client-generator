@@ -2,6 +2,8 @@
 {{{commentify options.license}}}
 
 {{/if}}
+require "json"
+
 module {{{classify api.info.cleanTitle}}}Rest
 
   # Class containing all the actions for the {{{titleize resourceName}}} Resource
@@ -71,6 +73,7 @@ module {{{classify api.info.cleanTitle}}}Rest
       {{/eq}}
       {{#eq in "query"}}
       query_params[:{{{name}}}] = params[:{{{name}}}] if params.has_key?(:{{{name}}})
+      query_params[:{{{name}}}] = JSON.dump query_params[:{{{name}}}] if params.type.eql?"object" 
       {{/eq}}
       {{#eq in "header"}}
       headers[:{{{name}}}] = params[:{{{name}}}] if params.has_key?(:{{{name}}})
