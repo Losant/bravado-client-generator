@@ -73,7 +73,9 @@ module {{{classify api.info.cleanTitle}}}Rest
       {{/eq}}
       {{#eq in "query"}}
       query_params[:{{{name}}}] = params[:{{{name}}}] if params.has_key?(:{{{name}}})
-      query_params[:{{{name}}}] = JSON.dump query_params[:{{{name}}}] if params.type.eql?"object" 
+      {{#eq type "object"}}
+      query_params[:{{{name}}}] = JSON.dump query_params[:{{{name}}}]
+      {{/eq}}
       {{/eq}}
       {{#eq in "header"}}
       headers[:{{{name}}}] = params[:{{{name}}}] if params.has_key?(:{{{name}}})
