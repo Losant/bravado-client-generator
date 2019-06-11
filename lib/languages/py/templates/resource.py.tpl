@@ -2,6 +2,9 @@
 {{{commentify options.license}}}
 
 {{/if}}
+
+import json
+
 """ Module for {{{api.info.title}}} {{{classify resourceName}}} wrapper class """
 # pylint: disable=C0301
 
