@@ -12,11 +12,10 @@
     "lint:fix": "yarn lint --fix",
     "lint:watch": "yarn lint --watch",
     "lint:changed": "lint-staged",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "precommit": "lint-staged"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
-    "node": ">=8.3"
+    "node": ">=10"
   },
   "author": "Losant <hello@losant.com>",
   "license": "MIT",
@@ -52,5 +51,10 @@
   },
   "eslintConfig": {
     "extends": "@losant/eslint-config-losant/env/node"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
