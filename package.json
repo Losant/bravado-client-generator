@@ -31,23 +31,23 @@
     "*.js": "esw"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "chalk": "^2.4.1",
-    "commander": "^2.19.0",
-    "debug": "^4.1.0",
+    "axios": "^0.19.0",
+    "chalk": "^2.4.2",
+    "commander": "^2.20.0",
+    "debug": "^4.1.1",
     "defaults": "^1.0.3",
     "fast-json-stable-stringify": "^2.0.0",
-    "fs-extra": "^7.0.0",
-    "handlebars": "^4.0.12",
+    "fs-extra": "^8.1.0",
+    "handlebars": "^4.1.2",
     "inflection": "^1.12.0",
-    "json-refs": "^3.0.12",
-    "qs": "^6.5.2",
-    "lodash": "^4.17.11",
+    "json-refs": "^3.0.13",
+    "qs": "^6.7.0",
+    "lodash": "^4.17.15",
     "uri-template": "^1.0.1"
   },
   "devDependencies": {
-    "@losant/eslint-config-losant": "^1.3.4",
-    "husky": "^0.14.3",
+    "@losant/eslint-config-losant": "^1.3.9",
+    "husky": "^3.0.1",
     "lint-staged": "^7.0.0"
   },
   "eslintConfig": {
