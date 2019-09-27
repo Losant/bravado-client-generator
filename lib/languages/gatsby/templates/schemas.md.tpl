@@ -4,11 +4,12 @@ description: A comprehensive list of the JSON schemas defining the objects expec
 ---
 
 # Schemas
-
 {{#stableObjEach api.schemaMap as |wrap defPath|}}
+
 ## {{wrap.title}}
 
-{{wrap.description}}
+{{{extraAnchorIfNeeded wrap defPath}}}
+{{~ wrap.description}}
 
 ### {{wrap.title}} Schema
 
@@ -21,5 +22,4 @@ description: A comprehensive list of the JSON schemas defining the objects expec
 ```json
 {{{json wrap.example}}}
 ```
-
 {{/stableObjEach}}
