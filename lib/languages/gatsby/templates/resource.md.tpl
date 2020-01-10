@@ -98,12 +98,16 @@ valid body for this request:
 {{#if (hasParamType ../api ../resourceName actionName "multipart")}}
 ### Request Body <a name="{{actionName}}-body"></a>
 
+The body of the request should be a [multipart form data](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST) post containing the following:
+
+| Name | Required | Description | Default | Example |
+| ---- | -------- | ----------- | ------- | ------- |
 {{#definedParams ../api ../resource action false}}
 {{#eq in "multipart"}}
-The body of the request should be a [multipart form data](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST) post where `{{name}}` is {{ lower description}}.
-
+{{queryParamDoc ../../api .}}
 {{/eq}}
 {{/definedParams}}
+
 {{/if}}
 ### Curl Example <a name="{{actionName}}-curl-example"></a>
 
