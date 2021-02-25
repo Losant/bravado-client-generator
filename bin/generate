@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-var program = require('commander');
-var chalk = require('chalk');
+const program = require('commander');
+const chalk = require('chalk');
 
 program
   .option('-u, --url <url>', 'URL to fetch API spec from')
@@ -10,20 +10,22 @@ program
   .option('-o, --output <dir>', 'Output directory [cwd]', '.')
   .option('-d, --debug', 'Output debug information')
   .parse(process.argv);
+const choices = program.opts();
 
-if (program.debug) { process.env.DEBUG = '*'; }
+if (choices.debug) { process.env.DEBUG = '*'; }
 
-var main = require('../lib/main');
+const main = require('../lib/main');
+
 main({
-  url: program.url,
-  root: program.root || program.url,
-  version: program.version,
-  lang: program.lang,
-  output: program.output
+  url: choices.url,
+  root: choices.root || choices.url,
+  version: choices.version,
+  lang: choices.lang,
+  output: choices.output
 })
-.then(function () {
-  console.log('%s', chalk.bold.green('Success'));
-})
-.catch(function (err) {
-  console.log('%s: %s', chalk.bold.red('Error'), err.stack);
-});
+  .then(() => {
+    console.log('%s', chalk.bold.green('Success')); // eslint-disable-line no-console
+  })
+  .catch((err) => {
+    console.log('%s: %s', chalk.bold.red('Error'), err.stack); // eslint-disable-line no-console
+  });
