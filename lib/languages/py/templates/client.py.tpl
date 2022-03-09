@@ -6,7 +6,10 @@
 # pylint: disable=E0401
 
 import requests
-import collections
+try:
+    from collections.abc import Mapping
+except ImportError:
+    from collections import Mapping
 import sys
 {{#stableObjEach api.resources as |resource name|}}
 from .{{{underscore name}}} import {{{classify name}}}
@@ -69,7 +72,7 @@ class Client(object):
             return result
 
         map_data = None
-        if not isinstance(data, collections.Mapping):
+        if not isinstance(data, Mapping):
             map_data = []
             for idx, val in enumerate(data):
                 map_data.append([str(idx), val])
