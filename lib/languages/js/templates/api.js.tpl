@@ -69,8 +69,9 @@ module.exports = function (options) {
       .catch(function (axiosError) {
         var err;
         if (axiosError.response) {
-          err = new Error(axiosError.response?.data?.message);
-          Object.keys(axiosError.response.data || {}).forEach(function(key) {
+          if (!axiosError.response.data) { axiosError.response.data = {}; }
+          err = new Error(axiosError.response.data.message);
+          Object.keys(axiosError.response.data).forEach(function(key) {
             if (key !== 'message') { err[key] = axiosError.response.data[key]; }
           });
           err.statusCode = axiosError.response.status;
