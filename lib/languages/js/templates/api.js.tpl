@@ -69,10 +69,10 @@ module.exports = function (options) {
       .catch(function (axiosError) {
         var err;
         if (axiosError.response) {
-          if (!axiosError.response.data) { axiosError.response.data = {}; }
-          err = new Error(axiosError.response.data.message);
-          Object.keys(axiosError.response.data).forEach(function(key) {
-            if (key !== 'message') { err[key] = axiosError.response.data[key]; }
+          var errorData = axiosError.response.data || {};
+          err = new Error(errorData.message);
+          Object.keys(errorData).forEach(function(key) {
+            if (key !== 'message') { err[key] = errorData[key]; }
           });
           err.statusCode = axiosError.response.status;
         } else {
