@@ -59,7 +59,9 @@ module.exports = function (options) {
       }
     }
     req.url = (opts.url || '{{{options.root}}}') + req.url;
-    req.paramsSerializer = function(params) { return qs.stringify(params); };
+    req.paramsSerializer = {
+      serialize: function(params) { return qs.stringify(params); }
+    };
     var promise = axios(req, cb)
       .then(function (response) {
         response = response.data;
