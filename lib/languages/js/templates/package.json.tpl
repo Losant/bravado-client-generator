@@ -4,11 +4,11 @@
   "description": "{{{api.info.description}}}",
   "main": "lib/index.js",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.27.2",
     "es6-promise": "^4.2.8",
-    "eventsource": "^1.0.7",
-    "form-data": "^3.0.0",
-    "qs": "^6.9.4",
-    "uri-template": "^1.0.1"
+    "eventsource": "^2.0.2",
+    "form-data": "^4.0.0",
+    "qs": "^6.11.0",
+    "uri-template": "^2.0.0"
   }
 }
