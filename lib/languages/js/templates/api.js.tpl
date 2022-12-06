@@ -75,6 +75,9 @@ module.exports = function (options) {
             if (key !== 'message') { err[key] = errorData[key]; }
           });
           err.statusCode = axiosError.response.status;
+        } else if (axiosError.code === 'ERR_FR_MAX_BODY_LENGTH_EXCEEDED') {
+          err = new Error('File is too large.');
+          err.statusCode = 413;
         } else {
           err = axiosError;
         }
