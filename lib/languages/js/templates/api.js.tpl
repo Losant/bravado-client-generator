@@ -75,7 +75,7 @@ module.exports = function (options) {
             if (key !== 'message') { err[key] = errorData[key]; }
           });
           err.statusCode = axiosError.response.status;
-          if (err.statusCode === 413) { err.message = 'Request entity too large.'}
+          if (err.statusCode === 413 && !err.message) { err.message = 'Request entity too large.'}
         } else {
           err = axiosError;
         }
