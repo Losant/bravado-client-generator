@@ -60,7 +60,7 @@ module.exports = function (options, client) {
     } else if (!opts) {
       opts = {};
     }{{#if (isMultipart action.params)}}
-    opts.multipart = true;{{/if}}
+    opts.multipartTypes = {};{{/if}}
     params = params || {};
     var tpl = uriTemplate.parse('{{{joinPath ../api.basePath ../resource.path action.path}}}');
     var pathParams = {};
@@ -71,7 +71,8 @@ module.exports = function (options, client) {
       params: { _actions: false, _links: true, _embedded: true }
     };
     {{#definedParams ../api ../resource action true}}
-    {{{setParam .}}}
+    {{#eq in 'multipart'}}opts.multipartTypes.{{name}} = '{{type}}';
+    {{/eq}}{{{setParam .}}}
     {{/definedParams}}
     req.url = tpl.expand(pathParams);
     return client.request(req, opts, cb);
