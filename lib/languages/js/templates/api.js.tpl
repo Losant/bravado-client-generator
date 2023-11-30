@@ -48,11 +48,17 @@ module.exports = function (options) {
     if (opts.acceptVersion) {
       req.headers['Accept-Version'] = opts.acceptVersion;
     }
-    if (opts.multipart) {
+    if (opts.multipartTypes) {
       var data = req.data || {};
       req.data = new FormData();
       Object.keys(data).forEach(function(key) {
-        req.data.append(key, data[key]);
+        if(opts.multipartTypes[key] === 'object') {
+          req.data.append(key, JSON.stringify(data[key]));
+        } else if (opts.multipartTypes[key] === 'file' && typeof(data[key]) === 'string') {
+          req.data.append(key, data[key], { filename: key });
+        } else {
+          req.data.append(key, data[key]);
+        }
       });
       if (req.data.getHeaders) {
         req.headers = Object.assign(req.data.getHeaders(), req.headers);
@@ -75,6 +81,7 @@ module.exports = function (options) {
             if (key !== 'message') { err[key] = errorData[key]; }
           });
           err.statusCode = axiosError.response.status;
+          if (err.statusCode === 413 && !err.message) { err.message = 'Request entity too large.'}
         } else {
           err = axiosError;
         }
