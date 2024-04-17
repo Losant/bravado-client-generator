@@ -30,23 +30,23 @@
     "*.js": "esw"
   },
   "dependencies": {
-    "axios": "^1.6.2",
+    "axios": "^1.6.8",
     "chalk": "^4.1.2",
-    "commander": "^11.1.0",
+    "commander": "^12.0.0",
     "debug": "^4.3.4",
     "fast-json-stable-stringify": "^2.1.0",
     "fs-extra": "^11.2.0",
     "handlebars": "^4.7.7",
-    "inflection": "^2.0.1",
+    "inflection": "^3.0.0",
     "json-refs": "^3.0.15",
     "lodash": "^4.17.21",
-    "qs": "^6.11.0",
+    "qs": "^6.12.1",
     "uri-template": "^2.0.0"
   },
   "devDependencies": {
     "@losant/eslint-config-losant": "^1.5.0",
-    "husky": "^8.0.2",
-    "lint-staged": "^15.1.0"
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2"
   },
   "eslintConfig": {
     "extends": "@losant/eslint-config-losant/env/node"
