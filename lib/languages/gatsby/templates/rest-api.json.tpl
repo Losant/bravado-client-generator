@@ -5,8 +5,8 @@
   "slug": "rest-api",
   "links": [
       { "name": "Overview", "url": "/rest-api/overview/" },
-    {{#each resources}}
-      { "name": "{{this}}", "url": "/rest-api/{{dasherize this}}/" },
+    {{#each niceNames}}
+      { "name": "{{this}}", "url": "/rest-api/{{dasherize (titleize (lookup ../nameMap this))}}/" },
     {{/each}}
       { "name": "Schemas", "url": "/rest-api/schemas/" }
   ]

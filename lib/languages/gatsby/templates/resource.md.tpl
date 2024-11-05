@@ -1,14 +1,14 @@
 ---
 category: Rest API
-description: A detailed look at the various REST actions supported by the {{titleize resourceName}} resource of the {{{api.info.title}}}. Learn more.
+description: A detailed look at the various REST actions supported by the {{niceResourceName resourceName}} resource of the {{{api.info.title}}}. Learn more.
 ---
 
-# {{titleize resourceName}} Actions
+# {{niceResourceName resourceName}} Actions
 
 <p>{{{options.root}}}{{{joinPath api.basePath resource.path ''}}}</p>
 
 Below are the various requests that can be performed against the
-{{titleize resourceName}} resource, as well as the expected
+{{niceResourceName resourceName}} resource, as well as the expected
 parameters and the potential responses.
 {{#stableObjEach resource.actions as |action actionName|}}
 
