@@ -1,6 +1,7 @@
 ---
 category: Rest API
 description: A detailed look at the various REST actions supported by the {{niceResourceName resourceName}} resource of the {{{api.info.title}}}. Learn more.
+toc_max_heading_level: 2
 ---
 
 import JsonDisplay from '@site/src/components/JsonDisplay'
@@ -28,22 +29,22 @@ parameters and the potential responses.
 **DEPRECATED**
 
 {{/if}}
-### Method And Url <a name="{{actionName}}-method-url"></a>
+### Method And Url {#{{actionName}}-method-url}
 
 <p>{{upper action.method}} {{{joinPath ../options.root ../api.basePath ../resource.path action.path}}}</p>
 
-### Authentication <a name="{{actionName}}-authentication"></a>
+### Authentication {#{{actionName}}-authentication}
 
 {{#if (hasAuthScopes ../api ../resource action)}}
-A valid api access token is required to access this endpoint. The token must
+A valid API access token is required to access this endpoint. The token must
 include at least one of the following scopes:
-{{arrayToTextList (validAuthScopes ../api ../resource action)}}.
+{{{arrayToCodeList (validAuthScopes ../api ../resource action)}}}.
 {{else}}
 No authentication is required for this endpoint.
 {{/if}}
 
 {{#if (hasParamType ../api ../resourceName actionName "path")}}
-### Request Path Components <a name="{{actionName}}-path-components"></a>
+### Request Path Components {#{{actionName}}-path-components}
 
 | Path Component | Description | Example |
 | -------------- | ----------- | ------- |
@@ -55,7 +56,7 @@ No authentication is required for this endpoint.
 
 {{/if}}
 {{#if (hasParamType ../api ../resourceName actionName "query")}}
-### Request Query Parameters <a name="{{actionName}}-query-params"></a>
+### Request Query Parameters {#{{actionName}}-query-params}
 
 | Name | Required | Description | Default | Example |
 | ---- | -------- | ----------- | ------- | ------- |
@@ -67,7 +68,7 @@ No authentication is required for this endpoint.
 
 {{/if}}
 {{#if (hasParamType ../api ../resourceName actionName "header")}}
-### Request Headers <a name="{{actionName}}-headers"></a>
+### Request Headers {#{{actionName}}-headers}
 
 | Name | Required | Description | Default |
 | ---- | -------- | ----------- | ------- |
@@ -82,12 +83,12 @@ No authentication is required for this endpoint.
 
 {{/if}}
 {{#if (hasParamType ../api ../resourceName actionName "body")}}
-### Request Body <a name="{{actionName}}-body"></a>
+### Request Body {#{{actionName}}-body}
 
 {{#definedParams ../api ../resource action false}}
 {{#eq in "body"}}
 The body of the request should be serialized JSON that validates against
-the {{paramSchemaLink ../../api .}} schema. For example, the following would be a
+the {{schemaLink ../../api.schemaMap schema.$ref}} schema. For example, the following would be a
 valid body for this request:
 
 ```json
@@ -98,7 +99,7 @@ valid body for this request:
 {{/definedParams}}
 {{/if}}
 {{#if (hasParamType ../api ../resourceName actionName "multipart")}}
-### Request Body <a name="{{actionName}}-body"></a>
+### Request Body {#{{actionName}}-body}
 
 The body of the request should be a [multipart form data](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST) post containing the following:
 
@@ -111,7 +112,7 @@ The body of the request should be a [multipart form data](https://developer.mozi
 {{/definedParams}}
 
 {{/if}}
-### Curl Example <a name="{{actionName}}-curl-example"></a>
+### Curl Example {#{{actionName}}-curl-example}
 
 ```bash
 {{#if (hasParamType ../api ../resourceName actionName "multipart")}}
@@ -128,7 +129,7 @@ curl -H 'Content-Type: application/json' \
 ```
 
 {{#if action.sseStream}}
-### SSE Stream for a Successful Response  <a name="{{actionName}}-successful-responses"></a>
+### SSE Stream for a Successful Response {#{{actionName}}-successful-responses}
 
 {{#stableObjEach action.responses as |response code|}}
 {{#eq code '200'}}
@@ -142,7 +143,7 @@ curl -H 'Content-Type: application/json' \
 {{/eq}}
 {{/stableObjEach}}
 {{else}}
-### Successful Responses <a name="{{actionName}}-successful-responses"></a>
+### Successful Responses {#{{actionName}}-successful-responses}
 
 | Code | Type | Description |
 | ---- | ---- | ----------- |
@@ -153,7 +154,7 @@ curl -H 'Content-Type: application/json' \
 {{/stableObjEach}}
 {{/if}}
 
-### Error Responses <a name="{{actionName}}-error-responses"></a>
+### Error Responses {#{{actionName}}-error-responses}
 
 | Code | Type | Description |
 | ---- | ---- | ----------- |
@@ -167,10 +168,9 @@ curl -H 'Content-Type: application/json' \
 ## Schemas
 {{#stableObjEach (schemasForResource api resource) as |wrap defPath|}}
 
-### {{wrap.title}}
+### {{wrap.title}} {#{{schemaAnchor defPath ~}} }
 
-{{{extraAnchorIfNeeded wrap defPath}}}
-{{~ wrap.description}}
+{{wrap.description}}
 
 #### {{wrap.title}} Schema
 
