@@ -47,7 +47,7 @@ No authentication is required for this endpoint.
 ### Request Path Components {#{{actionName}}-path-components}
 
 | Path Component | Description | Example |
-| -------------- | ----------- | ------- |
+| :------------- | :---------- | :------ |
 {{#definedParams ../api ../resource action false}}
 {{#eq in "path"}}
 | {{upper (underscore name)}} | {{description}} | {{ example }} |
@@ -59,7 +59,7 @@ No authentication is required for this endpoint.
 ### Request Query Parameters {#{{actionName}}-query-params}
 
 | Name | Required | Description | Default | Example |
-| ---- | -------- | ----------- | ------- | ------- |
+| :--- | :------- | :---------- | :------ | :------ |
 {{#definedParams ../api ../resource action false}}
 {{#eq in "query"}}
 {{{queryParamDoc ../../api .}}}
@@ -71,7 +71,7 @@ No authentication is required for this endpoint.
 ### Request Headers {#{{actionName}}-headers}
 
 | Name | Required | Description | Default |
-| ---- | -------- | ----------- | ------- |
+| :--- | :------- | :---------- | :------ |
 {{#if (hasAuthScopes ../api ../resource action)}}
 | Authorization | Y | The token for authenticating the request, prepended with Bearer | |
 {{/if}}
@@ -104,7 +104,7 @@ valid body for this request:
 The body of the request should be a [multipart form data](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/POST) post containing the following:
 
 | Name | Required | Description | Default | Example |
-| ---- | -------- | ----------- | ------- | ------- |
+| :--- | :------- | :---------- | :------ | :------ |
 {{#definedParams ../api ../resource action false}}
 {{#eq in "multipart"}}
 {{{queryParamDoc ../../api .}}}
@@ -136,7 +136,7 @@ curl -H 'Content-Type: application/json' \
 {{ response.description }}
 
 | SSE Event Name | Type | Description |
-| -------------- | ---- | ----------- |
+| :------------- | :--- | :---------- |
 {{#stableObjEach response.sseEvents as |eventInfo eventName|}}
 {{sseResponseDoc ../../../api eventName eventInfo}}
 {{/stableObjEach}}
@@ -146,7 +146,7 @@ curl -H 'Content-Type: application/json' \
 ### Successful Responses {#{{actionName}}-successful-responses}
 
 | Code | Type | Description |
-| ---- | ---- | ----------- |
+| :--- | :--- | :---------- |
 {{#stableObjEach action.responses as |response code|}}
 {{#lt code 400}}
 {{responseDoc ../../api code response}}
@@ -157,7 +157,7 @@ curl -H 'Content-Type: application/json' \
 ### Error Responses {#{{actionName}}-error-responses}
 
 | Code | Type | Description |
-| ---- | ---- | ----------- |
+| :--- | :--- | :---------- |
 {{#stableObjEach action.responses as |response code|}}
 {{#gte code 400}}
 {{responseDoc ../../api code response}}
