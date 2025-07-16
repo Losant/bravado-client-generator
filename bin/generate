@@ -8,6 +8,7 @@ program
   .option('-v, --version [version]', 'Version of the API [*]', '*')
   .option('-l, --lang [lang]', 'Language of generated client [js]', 'js')
   .option('-o, --output <dir>', 'Output directory [cwd]', '.')
+  .option('-t, --title [title]', 'The pre-fix title to use for directories, class names etc.', 'platform')
   .option('-d, --debug', 'Output debug information')
   .parse(process.argv);
 const choices = program.opts();
@@ -21,7 +22,8 @@ main({
   root: choices.root || choices.url,
   version: choices.version,
   lang: choices.lang,
-  output: choices.output
+  output: choices.output,
+  title: choices.title
 })
   .then(() => {
     console.log('%s', chalk.bold.green('Success')); // eslint-disable-line no-console
