@@ -4,7 +4,7 @@
 {{/if}}
 var axios = require('axios');
 var qs = require('qs');
-var EventSource = require('eventsource');
+var { EventSource } = require('eventsource');
 var EsPromise = require('es6-promise');
 var FormData = require('form-data');
 
@@ -111,7 +111,17 @@ module.exports = function (options) {
     }
     var fullUrl = (opts.url || '{{{options.root}}}') + req.url + '?' + qs.stringify(req.params);
 
-    var es = new EventSource(fullUrl, { headers: req.headers });
+    var es = new EventSource(fullUrl, {
+      fetch: (input, init) => {
+        return fetch(input, {
+          ...init,
+          headers: {
+            ...init.headers,
+            ...req.headers
+          }
+        });
+      }
+    });
 
     var promise = new EsPromise.Promise(function(resolve, reject) {
       es.onopen = function(){ resolve(); };
