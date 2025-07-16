@@ -2,7 +2,7 @@
 {{{commentify options.license}}}
 
 {{/if}}
-""" Module for {{{api.info.title}}} Client class """
+""" Module for {{{api.info.cleanTitle}}} Client class """
 # pylint: disable=E0401
 
 import requests

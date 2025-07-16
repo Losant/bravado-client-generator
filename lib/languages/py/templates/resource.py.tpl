@@ -5,7 +5,7 @@
 
 import json
 
-""" Module for {{{api.info.title}}} {{{classify resourceName}}} wrapper class """
+""" Module for {{{api.info.cleanTitle}}} API {{{classify resourceName}}} wrapper class """
 # pylint: disable=C0301
 
 class {{{classify resourceName}}}(object):
