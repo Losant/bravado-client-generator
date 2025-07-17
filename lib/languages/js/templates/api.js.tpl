@@ -5,7 +5,6 @@
 var axios = require('axios');
 var qs = require('qs');
 var { EventSource } = require('eventsource');
-var EsPromise = require('es6-promise');
 var FormData = require('form-data');
 
 /**
@@ -34,11 +33,12 @@ module.exports = function (options) {
       cb = opts;
       opts = {};
     }
-    opts = Object.assign({}, options, opts);
-    req.headers = Object.assign({}, req.headers, {
+    opts = { ...options, ...opts };
+    req.headers = {
+      ...req.headers,
       Accept: 'application/json',
       'Accept-Version': '^{{{api.info.version}}}'
-    });
+    };
     if (opts.accessToken) {
       req.headers.Authorization = 'Bearer ' + opts.accessToken;
     }
@@ -61,7 +61,7 @@ module.exports = function (options) {
         }
       });
       if (req.data.getHeaders) {
-        req.headers = Object.assign(req.data.getHeaders(), req.headers);
+        req.headers = { ...req.data.getHeaders(), ...req.headers };
       }
     }
     req.url = (opts.url || '{{{options.root}}}') + req.url;
@@ -97,12 +97,13 @@ module.exports = function (options) {
       cb = opts;
       opts = {};
     }
-    opts = Object.assign({}, options, opts);
+    opts = { ...options, ...opts };
 
-    req.headers = Object.assign({}, req.headers, {
+    req.headers = {
+      ...req.headers,
       Accept: 'application/json',
       'Accept-Version': '^{{{api.info.version}}}'
-    });
+    };
     if (opts.accessToken) {
       req.headers.Authorization = 'Bearer ' + opts.accessToken;
     }
@@ -123,7 +124,7 @@ module.exports = function (options) {
       }
     });
 
-    var promise = new EsPromise.Promise(function(resolve, reject) {
+    var promise = new Promise(function(resolve, reject) {
       es.onopen = function(){ resolve(); };
       es.onerror = function(err){ reject(err); };
     })
