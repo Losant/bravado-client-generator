@@ -24,7 +24,7 @@ module.exports = function (options) {
   internals.{{{name}}} = require('./{{{name}}}')(options, internals);
   {{/stableObjEach}}
 
-  internals.makeRequest = function(resourceName, action, definedParams, params, opts, cb) {
+  internals.makeRequest = function(resourceName, action, tpl, method, definedParams, params, opts, cb) {
     if ('function' === typeof params) {
       cb = params;
       params = {};
@@ -35,7 +35,6 @@ module.exports = function (options) {
     } else if (!opts) {
       opts = {};
     }
-    var { method, tpl, params } = requestInfo[resourceName][action];
     var pathParams = {};
     var req = {
       method,
