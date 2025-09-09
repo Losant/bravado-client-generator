@@ -49,33 +49,10 @@ module.exports = function (options, client) {
    {{/gte}}
    {{/stableObjEach}}
    */
-  internals.{{{actionName}}} = function (params, opts, cb) {
-    if ('function' === typeof params) {
-      cb = params;
-      params = {};
-      opts = {};
-    } else if ('function' === typeof opts) {
-      cb = opts;
-      opts = {};
-    } else if (!opts) {
-      opts = {};
-    }{{#if (isMultipart action.params)}}
-    opts.multipartTypes = {};{{/if}}
-    params = params || {};
+  internals.{{{actionName}}} = function (...args) {
     var tpl = uriTemplate.parse('{{{joinPath ../api.basePath ../resource.path action.path}}}');
-    var pathParams = {};
-    var req = {
-      method: '{{{action.method}}}',{{#ne action.method 'GET'}}
-      data: {},{{/ne}}
-      headers: {},
-      params: { _actions: false, _links: true, _embedded: true }
-    };
-    {{#definedParams ../api ../resource action true}}
-    {{#eq in 'multipart'}}opts.multipartTypes.{{name}} = '{{type}}';
-    {{/eq}}{{{setParam .}}}
-    {{/definedParams}}
-    req.url = tpl.expand(pathParams);
-    return client.request(req, opts, cb);
+    var definedParams = {{#buildParams ../api ../resource action }}{{/buildParams}}
+    return client.makeRequest('{{{../resourceName}}}', '{{{actionName}}}', tpl, '{{action.method}}', definedParams, ...args);
   };
 
   {{/unless}}
