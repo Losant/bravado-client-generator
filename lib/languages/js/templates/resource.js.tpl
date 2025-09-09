@@ -52,7 +52,7 @@ module.exports = function (options, client) {
   internals.{{{actionName}}} = function (...args) {
     var tpl = uriTemplate.parse('{{{joinPath ../api.basePath ../resource.path action.path}}}');
     var definedParams = {{#buildParams ../api ../resource action }}{{/buildParams}}
-    return client.makeRequest('{{{../resourceName}}}', '{{{actionName}}}', tpl, '{{action.method}}', definedParams, ...args);
+    return client.makeRequest(tpl, '{{action.method}}', definedParams, ...args);
   };
 
   {{/unless}}

@@ -24,7 +24,7 @@ module.exports = function (options) {
   internals.{{{name}}} = require('./{{{name}}}')(options, internals);
   {{/stableObjEach}}
 
-  internals.makeRequest = function(resourceName, action, tpl, method, definedParams, params, opts, cb) {
+  internals.makeRequest = function(tpl, method, definedParams, params, opts, cb) {
     if ('function' === typeof params) {
       cb = params;
       params = {};
@@ -44,35 +44,37 @@ module.exports = function (options) {
     if (method !== 'GET') {
       req.data = {};
     }
-    definedParams.forEach(({ name, in: from, required }) => {
-      if (from === 'path') {
-        if (required) {
-          if (params[name]) {
-            pathParams[name] = params[name];
-          } else {
-            throw new Error(`${name} is required`);
+    if (params) {
+      definedParams.forEach(({ name, in: from, required }) => {
+        if (from === 'path') {
+          if (required) {
+            if (params[name]) {
+              pathParams[name] = params[name];
+            } else {
+              throw new Error(`${name} is required`);
+            }
           }
+        } else if (from === 'query') {
+          if ('undefined' !== typeof params[name]) {
+            req.params[name] = params[name].type === 'object' ? JSON.stringify(params.type) : params[name];
+          }
+        } else if (from === 'header') {
+          if ('undefined' !== typeof params[name]) {
+            req.headers[name] = params[name];
+          }
+        } else if (from === 'body') {
+          if ('undefined' !== typeof params[name]) {
+            req.data = params[name];
+          }
+        } else if (from === 'multipart') {
+          if ('undefined' !== typeof params[name]) {
+            req.data[name] = params[name];
+          }
+        } else {
+          throw new Error(`Bad param placement ${from}`);
         }
-      } else if (from === 'query') {
-        if ('undefined' !== typeof params[name]) {
-          req.params[name] = params[name].type === 'object' ? JSON.stringify(params.type) : params[name];
-        }
-      } else if (from === 'header') {
-        if ('undefined' !== typeof params[name]) {
-          req.headers[name] = params[name];
-        }
-      } else if (from === 'body') {
-        if ('undefined' !== typeof params[name]) {
-          req.data = params[name];
-        }
-      } else if (from === 'multipart') {
-        if ('undefined' !== typeof params[name]) {
-          req.data[name] = params[name];
-        }
-      } else {
-        throw new Error(`Bad param placement ${from}`);
-      }
-    });
+      });
+    }
     req.url = tpl.expand(pathParams);
     return internals.request(req, opts, cb);
   };
