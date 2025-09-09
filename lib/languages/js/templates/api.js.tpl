@@ -38,7 +38,7 @@ module.exports = function (options) {
     var pathParams = {};
     var req = {
       method,
-      headers,
+      headers: {},
       params: { _actions: false, _links: true, _embedded: true }
     };
     if (method !== 'GET') {
