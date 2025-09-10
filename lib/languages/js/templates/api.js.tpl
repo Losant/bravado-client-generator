@@ -8,12 +8,14 @@ var { EventSource } = require('eventsource');
 var FormData = require('form-data');
 var uriTemplate = require('uri-template');
 
+var GLOBAL_PARAMS = {{#json GLOBAL_PARAMS }}{{/json}}
+
 var REQUEST_INFO = {
 {{#stableObjEach api.resources as |resource name|}}
   {{{name}}}: {
     {{#stableObjEach resource.actions as |action actionName| }}
     {{{actionName}}}: {
-      definedParams: {{#buildParams ../../api resource action }}{{/buildParams}},
+      definedParams: {{#buildParams ../../api resource action ../../GLOBAL_PARAMS_NAMES }}{{/buildParams}},
       path: '{{{joinPath ../../api.basePath resource.path action.path}}}',
       method: '{{action.method}}'
     },
@@ -36,6 +38,7 @@ module.exports = function (options) {
   var internals = {
     makeRequestFunction: function(name, method, isSseStream = false) {
       var { path, method, definedParams } = REQUEST_INFO[name][method];
+      const allParams = [ ...GLOBAL_PARAMS, ...definedParams ];
       return function(params, opts, cb) {
         var tpl = uriTemplate.parse(path);
         if ('function' === typeof params) {
@@ -51,7 +54,7 @@ module.exports = function (options) {
         var pathParams = {};
         var req = {
           headers: {},
-          params: { _actions: false, _links: true, _embedded: true }
+          params: {}
         };
         if (!isSseStream) {
           req.method = method;
@@ -61,7 +64,7 @@ module.exports = function (options) {
           }
         }
         if (params) {
-          definedParams.forEach(({ name, in: from, required, type }) => {
+          allParams.forEach(({ name, in: from, required, type }) => {
             if (from === 'path') {
               if (required) {
                 if (params[name]) {
@@ -71,32 +74,27 @@ module.exports = function (options) {
                 }
               }
             } else if (from === 'query') {
-              if ('undefined' !== typeof params[name]) {
+              if (params[name] !== undefined) {
                 req.params[name] = type === 'object' ? JSON.stringify(params[name]) : params[name];
               }
             } else if (from === 'header') {
-              if ('undefined' !== typeof params[name]) {
+              if (params[name] !== undefined) {
                 req.headers[name] = params[name];
               }
             } else if (from === 'body') {
-              if ('undefined' !== typeof params[name]) {
+              if (params[name] !== undefined) {
                 req.data = params[name];
               }
             } else if (from === 'multipart') {
               if (!opts.multipartTypes) { opts.multipartTypes = {}; }
               opts.multipartTypes[name] = type;
-              if ('undefined' !== typeof params[name]) {
+              if (params[name] !== undefined) {
                 req.data[name] = params[name];
               }
             } else {
               throw new Error(`Bad param placement ${from}`);
             }
           });
-          if (!isSseStream) { 
-            if ('undefined' !== typeof params._actions) { req.params._actions = params._actions; }
-            if ('undefined' !== typeof params._links) { req.params._links = params._links; }
-            if ('undefined' !== typeof params._embedded) { req.params._embedded = params._embedded; }
-          }
         }
         req.url = tpl.expand(pathParams);
         return isSseStream ? internals.attachEventSource(req, opts, cb) : internals.request(req, opts, cb);
