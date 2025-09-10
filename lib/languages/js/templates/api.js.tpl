@@ -19,12 +19,23 @@ var FormData = require('form-data');
 module.exports = function (options) {
   options = options || {};
   var internals = {};
+  var requestInfo = {};
 
   {{#stableObjEach api.resources as |resource name|}}
   internals.{{{name}}} = require('./{{{name}}}')(options, internals);
+  definedParams.{{{name}}} = {};
+  {{#stableObjEach resource.actions as |action actionName| }}
+  requestInfo.{{{name}}}.{{{actionName}}} = {
+    definedParams: {{#buildParams ../api ../resource action }}{{/buildParams}}
+    path: '{{{joinPath ../api.basePath ../resource.path action.path}}}',
+    method: '{{action.method}}'
+  };
+  {{#stableObjEach}}
   {{/stableObjEach}}
 
-  internals.makeRequest = function(tpl, method, definedParams, params, opts, cb) {
+  internals.makeRequest = function(name, method, params, opts, cb) {
+    var { path, method, definedParams } = requestInfo[name][method];
+    var tpl = uriTemplate.parse(path);
     if ('function' === typeof params) {
       cb = params;
       params = {};

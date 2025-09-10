@@ -50,9 +50,7 @@ module.exports = function (options, client) {
    {{/stableObjEach}}
    */
   internals.{{{actionName}}} = function (...args) {
-    var tpl = uriTemplate.parse('{{{joinPath ../api.basePath ../resource.path action.path}}}');
-    var definedParams = {{#buildParams ../api ../resource action }}{{/buildParams}}
-    return client.makeRequest(tpl, '{{action.method}}', definedParams, ...args);
+    return client.makeRequest('{{name}}', '{{{actionName}}}', ...args);
   };
 
   {{/unless}}
