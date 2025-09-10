@@ -8,14 +8,14 @@ var { EventSource } = require('eventsource');
 var FormData = require('form-data');
 var uriTemplate = require('uri-template');
 
-var GLOBAL_PARAMS = {{#json GLOBAL_PARAMS }}{{/json}}
+var GLOBAL_PARAMS = {{#json globalParams }}{{/json}}
 
 var REQUEST_INFO = {
 {{#stableObjEach api.resources as |resource name|}}
   {{{name}}}: {
     {{#stableObjEach resource.actions as |action actionName| }}
     {{{actionName}}}: {
-      definedParams: {{#buildParams ../../api resource action ../../GLOBAL_PARAMS_NAMES }}{{/buildParams}},
+      definedParams: {{#buildParams ../../api resource action ../../globalParamNames }}{{/buildParams}},
       path: '{{{joinPath ../../api.basePath resource.path action.path}}}',
       method: '{{action.method}}'
     },
@@ -65,32 +65,26 @@ module.exports = function (options) {
         }
         if (params) {
           allParams.forEach(({ name, in: from, required, type }) => {
-            if (from === 'path') {
-              if (required) {
-                if (params[name]) {
-                  pathParams[name] = params[name];
-                } else {
-                  throw new Error(`${name} is required`);
-                }
-              }
-            } else if (from === 'query') {
-              if (params[name] !== undefined) {
-                req.params[name] = type === 'object' ? JSON.stringify(params[name]) : params[name];
-              }
-            } else if (from === 'header') {
-              if (params[name] !== undefined) {
-                req.headers[name] = params[name];
-              }
-            } else if (from === 'body') {
-              if (params[name] !== undefined) {
-                req.data = params[name];
-              }
-            } else if (from === 'multipart') {
+            if (from === 'multipart') {
               if (!opts.multipartTypes) { opts.multipartTypes = {}; }
               opts.multipartTypes[name] = type;
-              if (params[name] !== undefined) {
-                req.data[name] = params[name];
+            }
+            if (params[name] === undefined) {
+              if (from === 'path' && required) {
+                throw new Error(`${name} is required`);
               }
+              return;
+            }
+            if (from === 'path') {
+              pathParams[name] = params[name];
+            } else if (from === 'query') {
+              req.params[name] = type === 'object' ? JSON.stringify(params[name]) : params[name];
+            } else if (from === 'header') {
+              req.headers[name] = params[name];
+            } else if (from === 'body') {
+              req.data = params[name];
+            } else if (from === 'multipart') {
+              req.data[name] = params[name];
             } else {
               throw new Error(`Bad param placement ${from}`);
             }
