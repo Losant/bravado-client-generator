@@ -71,10 +71,13 @@ module.exports = function (options) {
               if (!opts.multipartTypes) { opts.multipartTypes = {}; }
               opts.multipartTypes[name] = type;
             }
-            if (params[name] === undefined) {
-              if (from === 'path' && required) {
+            if (from === 'path' && !params[name]) {
+              if (required) {
                 throw new Error(`${name} is required`);
               }
+              return;
+            }
+            if (params[name] === undefined) {
               return;
             }
             if (from === 'path') {
