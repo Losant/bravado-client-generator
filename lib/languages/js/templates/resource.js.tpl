@@ -4,7 +4,7 @@
 {{/if}}
 var uriTemplate = require('uri-template');
 
-module.exports = function (options, client) {
+module.exports = function (name, options, client) {
   var internals = {};
 
   {{#stableObjEach resource.actions as |action actionName|}}
@@ -50,7 +50,7 @@ module.exports = function (options, client) {
    {{/stableObjEach}}
    */
   internals.{{{actionName}}} = function (...args) {
-    return client.makeRequest('{{name}}', '{{{actionName}}}', ...args);
+    return client.makeRequest(name, '{{{actionName}}}', ...args);
   };
 
   {{/unless}}

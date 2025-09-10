@@ -6,6 +6,21 @@ var axios = require('axios');
 var qs = require('qs');
 var { EventSource } = require('eventsource');
 var FormData = require('form-data');
+var uriTemplate = require('uri-template');
+
+var REQUEST_INFO = {
+{{#stableObjEach api.resources as |resource name|}}
+  {{{name}}}: {
+    {{#stableObjEach resource.actions as |action actionName| }}
+    {{{actionName}}}: {
+      definedParams: {{#buildParams ../../api resource action }}{{/buildParams}},
+      path: '{{{joinPath ../../api.basePath resource.path action.path}}}',
+      method: '{{action.method}}'
+    },
+    {{/stableObjEach}}
+  },
+{{/stableObjEach}}
+};
 
 /**
  {{#if api.info.title}}
@@ -22,19 +37,11 @@ module.exports = function (options) {
   var requestInfo = {};
 
   {{#stableObjEach api.resources as |resource name|}}
-  internals.{{{name}}} = require('./{{{name}}}')(options, internals);
-  definedParams.{{{name}}} = {};
-  {{#stableObjEach resource.actions as |action actionName| }}
-  requestInfo.{{{name}}}.{{{actionName}}} = {
-    definedParams: {{#buildParams ../api ../resource action }}{{/buildParams}}
-    path: '{{{joinPath ../api.basePath ../resource.path action.path}}}',
-    method: '{{action.method}}'
-  };
-  {{#stableObjEach}}
+  internals.{{{name}}} = require('./{{{name}}}')('{{{name}}}', options, internals);
   {{/stableObjEach}}
 
   internals.makeRequest = function(name, method, params, opts, cb) {
-    var { path, method, definedParams } = requestInfo[name][method];
+    var { path, method, definedParams } = REQUEST_INFO[name][method];
     var tpl = uriTemplate.parse(path);
     if ('function' === typeof params) {
       cb = params;
