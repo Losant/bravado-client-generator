@@ -2,7 +2,6 @@
 {{{commentify options.license}}}
 
 {{/if}}
-var uriTemplate = require('uri-template');
 
 module.exports = function (name, options, client) {
   var internals = {};
