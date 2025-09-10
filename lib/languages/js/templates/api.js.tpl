@@ -45,7 +45,7 @@ module.exports = function (options) {
       req.data = {};
     }
     if (params) {
-      definedParams.forEach(({ name, in: from, required }) => {
+      definedParams.forEach(({ name, in: from, required, type }) => {
         if (from === 'path') {
           if (required) {
             if (params[name]) {
@@ -56,7 +56,7 @@ module.exports = function (options) {
           }
         } else if (from === 'query') {
           if ('undefined' !== typeof params[name]) {
-            req.params[name] = params[name].type === 'object' ? JSON.stringify(params.type) : params[name];
+            req.params[name] = type === 'object' ? JSON.stringify(params[name]) : params[name];
           }
         } else if (from === 'header') {
           if ('undefined' !== typeof params[name]) {
