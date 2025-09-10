@@ -37,7 +37,7 @@ module.exports = function (options) {
     makeRequestFunction: function(name, method) {
       var { path, method, definedParams } = REQUEST_INFO[name][method];
       return function(params, opts, cb) {
-          var tpl = uriTemplate.parse(path);
+        var tpl = uriTemplate.parse(path);
         if ('function' === typeof params) {
           cb = params;
           params = {};
@@ -80,6 +80,8 @@ module.exports = function (options) {
                 req.data = params[name];
               }
             } else if (from === 'multipart') {
+              if (!opts.multipartTypes) { opts.multipartTypes = {}; }
+              opts.multipartTypes[name] = type;
               if ('undefined' !== typeof params[name]) {
                 req.data[name] = params[name];
               }
@@ -87,6 +89,9 @@ module.exports = function (options) {
               throw new Error(`Bad param placement ${from}`);
             }
           });
+          if ('undefined' !== typeof params._actions) { req.params._actions = params._actions; }
+          if ('undefined' !== typeof params._links) { req.params._links = params._links; }
+          if ('undefined' !== typeof params._embedded) { req.params._embedded = params._embedded; }
         }
         req.url = tpl.expand(pathParams);
         return internals.request(req, opts, cb);
