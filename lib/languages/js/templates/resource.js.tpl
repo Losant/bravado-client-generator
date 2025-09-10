@@ -104,28 +104,7 @@ module.exports = function (name, options, client) {
    {{/gte}}
    {{/stableObjEach}}
    */
-  internals.{{{actionName}}} = function (params, opts, cb) {
-    if ('function' === typeof params) {
-      cb = params;
-      params = {};
-      opts = {};
-    } else if ('function' === typeof opts) {
-      cb = opts;
-      opts = {};
-    }
-    params = params || {};
-    var tpl = uriTemplate.parse('{{{joinPath ../api.basePath ../resource.path action.path}}}');
-    var pathParams = {};
-    var req = {
-      headers: {},
-      params: {}
-    };
-    {{#definedParams ../api ../resource action true true}}
-    {{{setParam .}}}
-    {{/definedParams}}
-    req.url = tpl.expand(pathParams);
-    return client.attachEventSource(req, opts, cb);
-  };
+  internals.{{{actionName}}} = client.makeRequestFunction(name, '{{{actionName}}}', true);
 
   {{/if}}
   {{/stableObjEach}}

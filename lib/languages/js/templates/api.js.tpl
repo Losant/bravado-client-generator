@@ -34,7 +34,7 @@ var REQUEST_INFO = {
 module.exports = function (options) {
   options = options || {};
   var internals = {
-    makeRequestFunction: function(name, method) {
+    makeRequestFunction: function(name, method, isSseStream = false) {
       var { path, method, definedParams } = REQUEST_INFO[name][method];
       return function(params, opts, cb) {
         var tpl = uriTemplate.parse(path);
@@ -50,12 +50,15 @@ module.exports = function (options) {
         }
         var pathParams = {};
         var req = {
-          method,
           headers: {},
           params: { _actions: false, _links: true, _embedded: true }
         };
-        if (method !== 'GET') {
-          req.data = {};
+        if (!isSseStream) {
+          req.method = method;
+          req.params = { _actions: false, _links: true, _embedded: true };
+          if (method !== 'GET') {
+            req.data = {};
+          }
         }
         if (params) {
           definedParams.forEach(({ name, in: from, required, type }) => {
@@ -89,12 +92,14 @@ module.exports = function (options) {
               throw new Error(`Bad param placement ${from}`);
             }
           });
-          if ('undefined' !== typeof params._actions) { req.params._actions = params._actions; }
-          if ('undefined' !== typeof params._links) { req.params._links = params._links; }
-          if ('undefined' !== typeof params._embedded) { req.params._embedded = params._embedded; }
+          if (!isSseStream) { 
+            if ('undefined' !== typeof params._actions) { req.params._actions = params._actions; }
+            if ('undefined' !== typeof params._links) { req.params._links = params._links; }
+            if ('undefined' !== typeof params._embedded) { req.params._embedded = params._embedded; }
+          }
         }
         req.url = tpl.expand(pathParams);
-        return internals.request(req, opts, cb);
+        return isSseStream ? internals.attachEventSource(req, opts, cb) : internals.request(req, opts, cb);
       }
     }
   };
