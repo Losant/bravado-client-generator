@@ -33,70 +33,72 @@ var REQUEST_INFO = {
  */
 module.exports = function (options) {
   options = options || {};
-  var internals = {};
+  var internals = {
+    makeRequestFunction: function(name, method) {
+      var { path, method, definedParams } = REQUEST_INFO[name][method];
+      return function(params, opts, cb) {
+          var tpl = uriTemplate.parse(path);
+        if ('function' === typeof params) {
+          cb = params;
+          params = {};
+          opts = {};
+        } else if ('function' === typeof opts) {
+          cb = opts;
+          opts = {};
+        } else if (!opts) {
+          opts = {};
+        }
+        var pathParams = {};
+        var req = {
+          method,
+          headers: {},
+          params: { _actions: false, _links: true, _embedded: true }
+        };
+        if (method !== 'GET') {
+          req.data = {};
+        }
+        if (params) {
+          definedParams.forEach(({ name, in: from, required, type }) => {
+            if (from === 'path') {
+              if (required) {
+                if (params[name]) {
+                  pathParams[name] = params[name];
+                } else {
+                  throw new Error(`${name} is required`);
+                }
+              }
+            } else if (from === 'query') {
+              if ('undefined' !== typeof params[name]) {
+                req.params[name] = type === 'object' ? JSON.stringify(params[name]) : params[name];
+              }
+            } else if (from === 'header') {
+              if ('undefined' !== typeof params[name]) {
+                req.headers[name] = params[name];
+              }
+            } else if (from === 'body') {
+              if ('undefined' !== typeof params[name]) {
+                req.data = params[name];
+              }
+            } else if (from === 'multipart') {
+              if ('undefined' !== typeof params[name]) {
+                req.data[name] = params[name];
+              }
+            } else {
+              throw new Error(`Bad param placement ${from}`);
+            }
+          });
+        }
+        req.url = tpl.expand(pathParams);
+        return internals.request(req, opts, cb);
+      }
+    }
+  };
 
   {{#stableObjEach api.resources as |resource name|}}
   internals.{{{name}}} = require('./{{{name}}}')('{{{name}}}', options, internals);
   {{/stableObjEach}}
 
-  internals.makeRequestFunction = function(name, method, params, opts, cb) {
-    var { path, method, definedParams } = REQUEST_INFO[name][method];
-    return function(params, opts, cb) {
-        var tpl = uriTemplate.parse(path);
-      if ('function' === typeof params) {
-        cb = params;
-        params = {};
-        opts = {};
-      } else if ('function' === typeof opts) {
-        cb = opts;
-        opts = {};
-      } else if (!opts) {
-        opts = {};
-      }
-      var pathParams = {};
-      var req = {
-        method,
-        headers: {},
-        params: { _actions: false, _links: true, _embedded: true }
-      };
-      if (method !== 'GET') {
-        req.data = {};
-      }
-      if (params) {
-        definedParams.forEach(({ name, in: from, required, type }) => {
-          if (from === 'path') {
-            if (required) {
-              if (params[name]) {
-                pathParams[name] = params[name];
-              } else {
-                throw new Error(`${name} is required`);
-              }
-            }
-          } else if (from === 'query') {
-            if ('undefined' !== typeof params[name]) {
-              req.params[name] = type === 'object' ? JSON.stringify(params[name]) : params[name];
-            }
-          } else if (from === 'header') {
-            if ('undefined' !== typeof params[name]) {
-              req.headers[name] = params[name];
-            }
-          } else if (from === 'body') {
-            if ('undefined' !== typeof params[name]) {
-              req.data = params[name];
-            }
-          } else if (from === 'multipart') {
-            if ('undefined' !== typeof params[name]) {
-              req.data[name] = params[name];
-            }
-          } else {
-            throw new Error(`Bad param placement ${from}`);
-          }
-        });
-      }
-      req.url = tpl.expand(pathParams);
-      return internals.request(req, opts, cb);
-    }
-  };
+  internals.;
 
   /**
    * Make a generic request to the API
