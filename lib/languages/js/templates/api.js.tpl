@@ -98,8 +98,6 @@ module.exports = function (options) {
   internals.{{{name}}} = require('./{{{name}}}')('{{{name}}}', options, internals);
   {{/stableObjEach}}
 
-  internals.;
-
   /**
    * Make a generic request to the API
    */
