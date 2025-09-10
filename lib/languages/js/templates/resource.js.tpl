@@ -49,9 +49,7 @@ module.exports = function (name, options, client) {
    {{/gte}}
    {{/stableObjEach}}
    */
-  internals.{{{actionName}}} = function (...args) {
-    return client.makeRequest(name, '{{{actionName}}}', ...args);
-  };
+  internals.{{{actionName}}} = client.makeRequestFunction(name, '{{{actionName}}}');
 
   {{/unless}}
   {{/stableObjEach}}
