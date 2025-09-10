@@ -13,9 +13,10 @@ var GLOBAL_PARAMS = {{#json globalParams }}{{/json}}
 var REQUEST_INFO = {
 {{#stableObjEach api.resources as |resource name|}}
   {{{name}}}: {
+    resourceParams: {{#buildParams resource ../globalParamNames }}{{/buildParams}},
     {{#stableObjEach resource.actions as |action actionName| }}
     {{{actionName}}}: {
-      definedParams: {{#buildParams ../../api resource action ../../globalParamNames }}{{/buildParams}},
+      actionParams: {{#buildParams action ../../globalParamNames }}{{/buildParams}},
       path: '{{{joinPath ../../api.basePath resource.path action.path}}}',
       method: '{{action.method}}'
     },
@@ -37,8 +38,9 @@ module.exports = function (options) {
   options = options || {};
   var internals = {
     makeRequestFunction: function(name, method, isSseStream = false) {
-      var { path, method, definedParams } = REQUEST_INFO[name][method];
-      const allParams = [ ...GLOBAL_PARAMS, ...definedParams ];
+      var { resourceParams } = REQUEST_INFO[name];
+      var { path, method, actionParams } = REQUEST_INFO[name][method];
+      const allParams = [ ...GLOBAL_PARAMS, ...resourceParams, ...actionParams ];
       return function(params, opts, cb) {
         var tpl = uriTemplate.parse(path);
         if ('function' === typeof params) {
