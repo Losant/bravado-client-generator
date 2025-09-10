@@ -3,7 +3,7 @@
 
 {{/if}}
 
-module.exports = function (name, options, client) {
+module.exports = function (options, client) {
   var internals = {};
 
   {{#stableObjEach resource.actions as |action actionName|}}
@@ -48,7 +48,7 @@ module.exports = function (name, options, client) {
    {{/gte}}
    {{/stableObjEach}}
    */
-  internals.{{{actionName}}} = client.makeRequestFunction(name, '{{{actionName}}}');
+  internals.{{{actionName}}} = client.makeRequestFunction('{{{../resourceName}}}', '{{{actionName}}}');
 
   {{/unless}}
   {{/stableObjEach}}
@@ -103,7 +103,7 @@ module.exports = function (name, options, client) {
    {{/gte}}
    {{/stableObjEach}}
    */
-  internals.{{{actionName}}} = client.makeRequestFunction(name, '{{{actionName}}}', true);
+  internals.{{{actionName}}} = client.makeRequestFunction('{{{../resourceName}}}', '{{{actionName}}}', true);
 
   {{/if}}
   {{/stableObjEach}}

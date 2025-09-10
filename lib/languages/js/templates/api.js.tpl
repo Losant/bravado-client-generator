@@ -103,7 +103,7 @@ module.exports = function (options) {
   };
 
   {{#stableObjEach api.resources as |resource name|}}
-  internals.{{{name}}} = require('./{{{name}}}')('{{{name}}}', options, internals);
+  internals.{{{name}}} = require('./{{{name}}}')(options, internals);
   {{/stableObjEach}}
 
   /**
