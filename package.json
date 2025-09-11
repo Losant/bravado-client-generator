@@ -7,6 +7,11 @@
   "bin": {
     "bravado-client-generator": "bin/generate"
   },
+  "exports": {
+    "require": "./lib/main.js",
+    "import": "./lib/main.js",
+    "default": "./lib/main.js"
+  },
   "scripts": {
     "reinstall": "rm -rf node_modules && yarn install",
     "lint": "esw . --ext .js",
