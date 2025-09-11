@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-const { program } = require('commander');
-const chalk = require('chalk');
+import { program } from 'commander';
+import chalk from 'chalk';
+import main from '../lib/main.js';
 
 program
   .option('-u, --url <url>', 'URL to fetch API spec from')
@@ -15,7 +16,6 @@ const choices = program.opts();
 
 if (choices.debug) { process.env.DEBUG = '*'; }
 
-const main = require('../lib/main');
 
 main({
   url: choices.url,
