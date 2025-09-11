@@ -7,6 +7,7 @@ var qs = require('qs');
 var { EventSource } = require('eventsource');
 var FormData = require('form-data');
 var uriTemplate = require('uri-template');
+var path = require('path');
 
 var GLOBAL_PARAMS = {{#json globalParams }}{{/json}}
 
