@@ -82,10 +82,22 @@ module.exports = function (options) {
       }
     }
   };
+  {{#if options.compressed}}
+  Object.keys(REQUEST_INFO).forEach((resource) => {
+    internals[resource] = {};
+    Object.keys(REQUEST_INFO[resource].actions).forEach((actionName) => {
+      var { sseStream } = REQUEST_INFO[resource].actions[actionName];
+      internals[resource][actionName] = internals.makeRequestFunction(resource, actionName, sseStream)
+    });
+  });
+  {{/if}}
 
+  {{#unless options.compressed}}
   {{#stableObjEach api.resources as |resource name|}}
   internals.{{{name}}} = require('./{{{name}}}')(options, internals);
   {{/stableObjEach}}
+  {{/unless}}
+
 
   /**
    * Make a generic request to the API
