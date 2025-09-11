@@ -40,9 +40,9 @@ module.exports = function (options) {
     makeRequestFunction: function(name, method, isSseStream = false) {
       var { resourceParams } = REQUEST_INFO[name];
       var { path, method, actionParams } = REQUEST_INFO[name][method];
-      const allParams = [ ...GLOBAL_PARAMS, ...resourceParams, ...actionParams ];
+      var allParams = [ ...GLOBAL_PARAMS, ...resourceParams, ...actionParams ];
+      var tpl = uriTemplate.parse(path);
       return function(params, opts, cb) {
-        var tpl = uriTemplate.parse(path);
         if ('function' === typeof params) {
           cb = params;
           params = {};
@@ -67,14 +67,7 @@ module.exports = function (options) {
         }
         if (params) {
           allParams.forEach(({ name, in: from, required, type }) => {
-            if (from === 'multipart') {
-              if (!opts.multipartTypes) { opts.multipartTypes = {}; }
-              opts.multipartTypes[name] = type;
-            }
-            if (from === 'path' && !params[name]) {
-              if (required) {
-                throw new Error(`${name} is required`);
-              }
+            if (from === 'path' && !params[name] && required) {
               return;
             }
             if (params[name] === undefined) {
@@ -89,9 +82,9 @@ module.exports = function (options) {
             } else if (from === 'body') {
               req.data = params[name];
             } else if (from === 'multipart') {
+              if (!opts.multipartTypes) { opts.multipartTypes = {}; }
+              opts.multipartTypes[name] = type;
               req.data[name] = params[name];
-            } else {
-              throw new Error(`Bad param placement ${from}`);
             }
           });
         }
