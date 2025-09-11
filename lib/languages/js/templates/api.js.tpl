@@ -10,20 +10,7 @@ var uriTemplate = require('uri-template');
 
 var GLOBAL_PARAMS = {{#json globalParams }}{{/json}}
 
-var REQUEST_INFO = {
-{{#stableObjEach api.resources as |resource name|}}
-  {{{name}}}: {
-    resourceParams: {{#buildParams resource ../globalParamNames }}{{/buildParams}},
-    {{#stableObjEach resource.actions as |action actionName| }}
-    {{{actionName}}}: {
-      actionParams: {{#buildParams action ../../globalParamNames }}{{/buildParams}},
-      path: '{{{joinPath ../../api.basePath resource.path action.path}}}',
-      method: '{{action.method}}'
-    },
-    {{/stableObjEach}}
-  },
-{{/stableObjEach}}
-};
+var REQUEST_INFO = require('../schemas/apiInfo.json');
 
 /**
  {{#if api.info.title}}
