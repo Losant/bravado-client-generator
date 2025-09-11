@@ -24,11 +24,12 @@ var REQUEST_INFO = require('../schemas/apiInfo.json');
 module.exports = function (options) {
   options = options || {};
   var internals = {
-    makeRequestFunction: function(name, method, isSseStream = false) {
-      var { resourceParams } = REQUEST_INFO[name];
-      var { path, method, actionParams } = REQUEST_INFO[name][method];
-      var allParams = [ ...GLOBAL_PARAMS, ...resourceParams, ...actionParams ];
-      var tpl = uriTemplate.parse(path);
+    makeRequestFunction: function(name, actionName, isSseStream = false) {
+      var { params: resourceParams, path: resourcePath } = REQUEST_INFO[name];
+      var { path: actionPath, params: actionParams, method } = REQUEST_INFO[name].actions[actionName];
+      var uriPath = path.posix.join(resourcePath || '', actionPath || '');
+      var allParams = [ ...GLOBAL_PARAMS, ...(actionParams || []), ...(resourceParams || []) ];
+      var tpl = uriTemplate.parse(uriPath);
       return function(params, opts, cb) {
         if ('function' === typeof params) {
           cb = params;
@@ -55,7 +56,7 @@ module.exports = function (options) {
         if (params) {
           allParams.forEach(({ name, in: from, required, type }) => {
             if (from === 'path' && !params[name] && required) {
-              return;
+              throw new Error(`${name} is required`);
             }
             if (params[name] === undefined) {
               return;
