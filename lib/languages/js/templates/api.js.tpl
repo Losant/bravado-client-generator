@@ -27,7 +27,7 @@ module.exports = function (options) {
     makeRequestFunction: function(name, actionName, isSseStream = false) {
       var { params: resourceParams, path: resourcePath } = REQUEST_INFO[name];
       var { path: actionPath, params: actionParams, method } = REQUEST_INFO[name].actions[actionName];
-      var uriPath = [ resourcePath || '', actionPath || '' ].join('/');
+      var uriPath = [ resourcePath || '', actionPath || '' ].join('');
       var allParams = [ ...GLOBAL_PARAMS, ...(actionParams || []), ...(resourceParams || []) ];
       var tpl = uriTemplate.parse(uriPath);
       return function(params, opts, cb) {
@@ -86,7 +86,7 @@ module.exports = function (options) {
     internals[resource] = {};
     Object.keys(REQUEST_INFO[resource].actions).forEach((actionName) => {
       var { sseStream } = REQUEST_INFO[resource].actions[actionName];
-      internals[resource][actionName] = internals.makeRequestFunction(resource, actionName, sseStream)
+      internals[resource][actionName] = internals.makeRequestFunction(resource, actionName, sseStream);
     });
   });
   {{/if}}
