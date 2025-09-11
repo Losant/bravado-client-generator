@@ -7,7 +7,6 @@ var qs = require('qs');
 var { EventSource } = require('eventsource');
 var FormData = require('form-data');
 var uriTemplate = require('uri-template');
-var path = require('path');
 
 var GLOBAL_PARAMS = {{#json globalParams }}{{/json}}
 
@@ -28,7 +27,7 @@ module.exports = function (options) {
     makeRequestFunction: function(name, actionName, isSseStream = false) {
       var { params: resourceParams, path: resourcePath } = REQUEST_INFO[name];
       var { path: actionPath, params: actionParams, method } = REQUEST_INFO[name].actions[actionName];
-      var uriPath = path.posix.join(resourcePath || '', actionPath || '');
+      var uriPath = [ resourcePath || '', actionPath || '' ].join('/');
       var allParams = [ ...GLOBAL_PARAMS, ...(actionParams || []), ...(resourceParams || []) ];
       var tpl = uriTemplate.parse(uriPath);
       return function(params, opts, cb) {
