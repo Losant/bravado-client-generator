@@ -8,7 +8,7 @@ var { EventSource } = require('eventsource');
 var FormData = require('form-data');
 var uriTemplate = require('uri-template');
 
-var GLOBAL_PARAMS = {{#json globalParams }}{{/json}}
+var GLOBAL_PARAMS = {{#json globalParams }}{{/json}};
 
 var REQUEST_INFO = require('../schemas/apiInfo.json');
 
