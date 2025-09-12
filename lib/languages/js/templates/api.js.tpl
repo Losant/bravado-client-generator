@@ -7,11 +7,12 @@ import qs from 'qs';
 import { EventSource } from 'eventsource';
 import FormData from 'form-data';
 import uriTemplate from 'uri-template';
-import REQUEST_INFO from '../schemas/apiInfo.json' with { type: 'json' };
 {{#unless options.compressed}}
-import { createRequire } from 'node:module';
-const require = createRequire(import.meta.url);
+{{#stableObjEach api.resources as |resource name|}}
+import {{{name}}} from './{{{name}}}.js';
+{{/stableObjEach}}
 {{/unless}}
+import REQUEST_INFO from '../schemas/apiInfo.json' with { type: 'json' };
 import GLOBAL_PARAMS from './constants/globalParams.json' with { type: 'json' };
 
 /**
@@ -81,7 +82,7 @@ export default function(options) {
   });
   {{else}}
   {{#stableObjEach api.resources as |resource name|}}
-  internals.{{{name}}} = require('./{{{name}}}')(options, internals);
+  internals.{{{name}}} = {{{name}}};
   {{/stableObjEach}}
   {{/if}}
 
