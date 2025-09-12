@@ -6,6 +6,11 @@ var axios = require('axios');
 var qs = require('qs');
 var { EventSource } = require('eventsource');
 var FormData = require('form-data');
+var uriTemplate = require('uri-template');
+
+var GLOBAL_PARAMS = {{{json globalParams}}};
+
+var REQUEST_INFO = require('../schemas/apiInfo.json');
 
 /**
  {{#if api.info.title}}
@@ -19,10 +24,73 @@ var FormData = require('form-data');
 module.exports = function (options) {
   options = options || {};
   var internals = {};
-
+  internals.makeRequestFunction = function(name, actionName) {
+    var { params: resourceParams, path: resourcePath } = REQUEST_INFO[name];
+    var { path: actionPath, params: actionParams, method, sseStream } = REQUEST_INFO[name].actions[actionName];
+    var uriPath = [ resourcePath || '', actionPath || '' ].join('');
+    var allParams = [ ...GLOBAL_PARAMS, ...(actionParams || []), ...(resourceParams || []) ];
+    var tpl = uriTemplate.parse(uriPath);
+    return function(params, opts, cb) {
+      if ('function' === typeof params) {
+        cb = params;
+        params = {};
+        opts = {};
+      } else if ('function' === typeof opts) {
+        cb = opts;
+        opts = {};
+      } else if (!opts) {
+        opts = {};
+      }
+      params = params || {};
+      var pathParams = {};
+      var req = {
+        headers: {},
+        params: {}
+      };
+      if (!sseStream) {
+        req.method = method;
+        req.params = { _actions: false, _links: true, _embedded: true };
+        if (method !== 'GET') {
+          req.data = {};
+        }
+      }
+      allParams.forEach(({ name, in: from, required, type }) => {
+        if (from === 'path' && !params[name] && required) {
+          throw new Error(`${name} is required`);
+        }
+        if (params[name] === undefined) {
+          return;
+        }
+        if (from === 'path') {
+          pathParams[name] = params[name];
+        } else if (from === 'query') {
+          req.params[name] = type === 'object' ? JSON.stringify(params[name]) : params[name];
+        } else if (from === 'header') {
+          req.headers[name] = params[name];
+        } else if (from === 'body') {
+          req.data = params[name];
+        } else if (from === 'multipart') {
+          if (!opts.multipartTypes) { opts.multipartTypes = {}; }
+          opts.multipartTypes[name] = type;
+          req.data[name] = params[name];
+        }
+      });
+      req.url = tpl.expand(pathParams);
+      return sseStream ? internals.attachEventSource(req, opts, cb) : internals.request(req, opts, cb);
+    }
+  };
+  {{#if options.compressed}}
+  Object.keys(REQUEST_INFO).forEach((resource) => {
+    internals[resource] = {};
+    Object.keys(REQUEST_INFO[resource].actions).forEach((actionName) => {
+      internals[resource][actionName] = internals.makeRequestFunction(resource, actionName);
+    });
+  });
+  {{else}}
   {{#stableObjEach api.resources as |resource name|}}
   internals.{{{name}}} = require('./{{{name}}}')(options, internals);
   {{/stableObjEach}}
+  {{/if}}
 
   /**
    * Make a generic request to the API
