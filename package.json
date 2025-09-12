@@ -2,20 +2,25 @@
   "name": "bravado-client-generator",
   "version": "1.0.0",
   "description": "Code generator for Bravado API clients",
+  "type": "module",
   "main": "lib/main.js",
   "bin": {
     "bravado-client-generator": "bin/generate"
   },
+  "exports": {
+    "require": "./lib/main.js",
+    "import": "./lib/main.js",
+    "default": "./lib/main.js"
+  },
   "scripts": {
     "reinstall": "rm -rf node_modules && yarn install",
-    "lint": "esw . --ext .js",
+    "lint": "eslint .",
     "lint:fix": "yarn lint --fix",
-    "lint:watch": "yarn lint --watch",
     "lint:changed": "lint-staged",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=22"
   },
   "author": "Losant <hello@losant.com>",
   "license": "MIT",
@@ -27,15 +32,15 @@
     "url": "git+https://github.com/Losant/bravado-client-generator.git"
   },
   "lint-staged": {
-    "*.js": "esw"
+    "*.js": "eslint"
   },
   "dependencies": {
-    "axios": "^1.10.0",
-    "chalk": "^4.1.2",
-    "commander": "^14.0.0",
+    "axios": "^1.12.1",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.1",
     "debug": "^4.4.1",
     "fast-json-stable-stringify": "^2.1.0",
-    "fs-extra": "^11.3.0",
+    "fs-extra": "^11.3.1",
     "handlebars": "^4.7.7",
     "inflection": "^3.0.2",
     "json-refs": "^3.0.15",
@@ -44,11 +49,8 @@
     "uri-template": "^2.0.0"
   },
   "devDependencies": {
-    "@losant/eslint-config-losant": "^1.5.0",
+    "@losant/eslint-config-losant": "^2.0.1",
     "husky": "^9.1.7",
-    "lint-staged": "^16.1.2"
-  },
-  "eslintConfig": {
-    "extends": "@losant/eslint-config-losant/env/node"
+    "lint-staged": "^16.1.6"
   }
 }
