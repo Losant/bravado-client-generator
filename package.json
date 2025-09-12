@@ -16,12 +16,11 @@
     "reinstall": "rm -rf node_modules && yarn install",
     "lint": "eslint .",
     "lint:fix": "yarn lint --fix",
-    "lint:watch": "yarn lint --watch",
     "lint:changed": "lint-staged",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=22"
   },
   "author": "Losant <hello@losant.com>",
   "license": "MIT",
@@ -53,8 +52,5 @@
     "@losant/eslint-config-losant": "^2.0.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.6"
-  },
-  "eslintConfig": {
-    "extends": "@losant/eslint-config-losant/env/node"
   }
 }
