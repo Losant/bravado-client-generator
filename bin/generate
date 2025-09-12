@@ -10,6 +10,7 @@ program
   .option('-l, --lang [lang]', 'Language of generated client [js]', 'js')
   .option('-o, --output <dir>', 'Output directory [cwd]', '.')
   .option('-t, --title [title]', 'The pre-fix title to use for directories, class names etc.', 'platform')
+  .option('-c, --compressed', 'Only for js - does not produce a file for each set of actions', false)
   .option('-d, --debug', 'Output debug information')
   .parse(process.argv);
 const choices = program.opts();
@@ -23,7 +24,8 @@ main({
   version: choices.version,
   lang: choices.lang,
   output: choices.output,
-  title: choices.title
+  title: choices.title,
+  compressed: choices.compressed
 })
   .then(() => {
     console.log('%s', chalk.bold.green('Success')); // eslint-disable-line no-console
