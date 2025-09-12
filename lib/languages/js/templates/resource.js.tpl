@@ -3,8 +3,8 @@
 
 {{/if}}
 
-module.exports = function (options, client) {
-  var internals = {};
+export default function (options, client) {
+  const internals = {};
 
   {{#stableObjEach resource.actions as |action actionName|}}
   {{#unless action.sseStream}}
