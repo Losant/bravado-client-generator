@@ -24,8 +24,7 @@ import GLOBAL_PARAMS from './constants/globalParams.json' with { type: 'json' };
  {{/if}}
  * version: {{{api.info.version}}}
  */
-export default function(options) {
-  options = options || {};
+export default function(options = {}) {
   const internals = {};
   internals.makeRequestFunction = function(resourceName, actionName) {
     const { params: resourceParams, path: resourcePath } = REQUEST_INFO[resourceName];
@@ -33,9 +32,7 @@ export default function(options) {
     const uriPath = [ resourcePath || '', actionPath || '' ].join('');
     const allParams = [ ...GLOBAL_PARAMS, ...(actionParams || []), ...(resourceParams || []) ];
     const tpl = uriTemplate.parse(uriPath);
-    return function(params, opts) {
-      params = params || {};
-      opts = opts || {};
+    return function(params = {}, opts = {}) {
       const pathParams = {};
       const req = {
         headers: {},
@@ -89,9 +86,8 @@ export default function(options) {
   /**
    * Make a generic request to the API
    */
-  internals.request = function(req, opts) {
-    req = req || {};
-    opts = { ...options, ...(opts || {}) };
+  internals.request = function(req = {}, opts = {}) {
+    opts = { ...options, ...opts };
     req.headers = {
       ...req.headers,
       'Accept': 'application/json',
@@ -148,9 +144,8 @@ export default function(options) {
     return reqPromise();
   };
 
-  internals.attachEventSource = (req, opts) => {
-    req = req || {};
-    opts = { ...options, ...(opts || {}) };
+  internals.attachEventSource = (req = {}, opts = {}) => {
+    opts = { ...options, ...opts };
 
     req.headers = {
       ...req.headers,

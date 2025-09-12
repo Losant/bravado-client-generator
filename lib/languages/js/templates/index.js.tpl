@@ -14,7 +14,5 @@ export const createClient = function(options) {
 };
 
 export default {
-  createClient: function(options) {
-    return client(options);
-  }
+  createClient
 };
