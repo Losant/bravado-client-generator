@@ -32,18 +32,9 @@ export default function(options) {
     const uriPath = [ resourcePath || '', actionPath || '' ].join('');
     const allParams = [ ...GLOBAL_PARAMS, ...(actionParams || []), ...(resourceParams || []) ];
     const tpl = uriTemplate.parse(uriPath);
-    return function(params, opts, cb) {
-      if ('function' === typeof params) {
-        cb = params;
-        params = {};
-        opts = {};
-      } else if ('function' === typeof opts) {
-        cb = opts;
-        opts = {};
-      } else if (!opts) {
-        opts = {};
-      }
+    return function(params, opts) {
       params = params || {};
+      opts = opts || {};
       const pathParams = {};
       const req = {
         headers: {},
@@ -78,7 +69,7 @@ export default function(options) {
         }
       });
       req.url = tpl.expand(pathParams);
-      return sseStream ? internals.attachEventSource(req, opts, cb) : internals.request(req, opts, cb);
+      return sseStream ? internals.attachEventSource(req, opts) : internals.request(req, opts);
     };
   };
   {{#if options.compressed}}
@@ -97,13 +88,9 @@ export default function(options) {
   /**
    * Make a generic request to the API
    */
-  internals.request = function(req, opts, cb) {
+  internals.request = function(req, opts) {
     req = req || {};
-    if ('function' === typeof opts) {
-      cb = opts;
-      opts = {};
-    }
-    opts = { ...options, ...opts };
+    opts = { ...options, ...(opts || {}) };
     req.headers = {
       ...req.headers,
       'Accept': 'application/json',
@@ -136,13 +123,11 @@ export default function(options) {
     }
     req.url = (opts.url || '{{{options.root}}}') + req.url;
     req.paramsSerializer = (params) => { return qs.stringify(params); };
-    const promise = axios(req, cb)
-      .then((response) => {
-        response = response.data;
-        if (cb) { return setTimeout(() => { cb(null, response); }, 0); }
-        return response;
-      })
-      .catch((axiosError) => {
+    const reqPromise = async () => {
+      try {
+        const response = await axios(req);
+        return response.data;
+      } catch (axiosError) {
         let err;
         if (axiosError.response) {
           const errorData = axiosError.response.data || {};
@@ -155,19 +140,16 @@ export default function(options) {
         } else {
           err = axiosError;
         }
-        if (cb) { return setTimeout(() => { cb(err); }, 0); }
         throw err;
-      });
-    if (!cb) { return promise; }
+      }
+    };
+
+    return reqPromise();
   };
 
-  internals.attachEventSource = (req, opts, cb) => {
+  internals.attachEventSource = (req, opts) => {
     req = req || {};
-    if ('function' === typeof opts) {
-      cb = opts;
-      opts = {};
-    }
-    opts = { ...options, ...opts };
+    opts = { ...options, ...(opts || {}) };
 
     req.headers = {
       ...req.headers,
@@ -194,14 +176,13 @@ export default function(options) {
       }
     });
 
-    const promise = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       es.onopen = resolve;
       es.onerror = reject;
     })
       .then(() => {
         es.onopen = null;
         es.onerror = null;
-        if (cb) { return setTimeout(() => { cb(null, es); }, 0); }
         return es;
       })
       .catch((err) => {
@@ -212,10 +193,8 @@ export default function(options) {
         }
         es.onopen = null;
         es.onerror = null;
-        if (cb) { return setTimeout(() => { cb(err); }, 0); }
         throw err;
       });
-    if (!cb) { return promise; }
   };
 
   /**

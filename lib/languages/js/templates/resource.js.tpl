@@ -103,7 +103,7 @@ export default function (options, client) {
    {{/gte}}
    {{/stableObjEach}}
    */
-  internals.{{{actionName}}} = client.makeRequestFunction('{{{../resourceName}}}', '{{{actionName}}}', true);
+  internals.{{{actionName}}} = client.makeRequestFunction('{{{../resourceName}}}', '{{{actionName}}}');
 
   {{/if}}
   {{/stableObjEach}}
