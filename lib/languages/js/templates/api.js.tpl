@@ -24,9 +24,9 @@ var REQUEST_INFO = require('../schemas/apiInfo.json');
 module.exports = function (options) {
   options = options || {};
   var internals = {
-    makeRequestFunction: function(name, actionName, isSseStream = false) {
+    makeRequestFunction: function(name, actionName) {
       var { params: resourceParams, path: resourcePath } = REQUEST_INFO[name];
-      var { path: actionPath, params: actionParams, method } = REQUEST_INFO[name].actions[actionName];
+      var { path: actionPath, params: actionParams, method, sseStream } = REQUEST_INFO[name].actions[actionName];
       var uriPath = [ resourcePath || '', actionPath || '' ].join('');
       var allParams = [ ...GLOBAL_PARAMS, ...(actionParams || []), ...(resourceParams || []) ];
       var tpl = uriTemplate.parse(uriPath);
@@ -41,12 +41,13 @@ module.exports = function (options) {
         } else if (!opts) {
           opts = {};
         }
+        params = params || {};
         var pathParams = {};
         var req = {
           headers: {},
           params: {}
         };
-        if (!isSseStream) {
+        if (!sseStream) {
           req.method = method;
           req.params = { _actions: false, _links: true, _embedded: true };
           if (method !== 'GET') {
@@ -77,7 +78,7 @@ module.exports = function (options) {
           });
         }
         req.url = tpl.expand(pathParams);
-        return isSseStream ? internals.attachEventSource(req, opts, cb) : internals.request(req, opts, cb);
+        return sseStream ? internals.attachEventSource(req, opts, cb) : internals.request(req, opts, cb);
       }
     }
   };
@@ -85,18 +86,14 @@ module.exports = function (options) {
   Object.keys(REQUEST_INFO).forEach((resource) => {
     internals[resource] = {};
     Object.keys(REQUEST_INFO[resource].actions).forEach((actionName) => {
-      var { sseStream } = REQUEST_INFO[resource].actions[actionName];
-      internals[resource][actionName] = internals.makeRequestFunction(resource, actionName, sseStream);
+      internals[resource][actionName] = internals.makeRequestFunction(resource, actionName);
     });
   });
-  {{/if}}
-
-  {{#unless options.compressed}}
+  {{else}}
   {{#stableObjEach api.resources as |resource name|}}
   internals.{{{name}}} = require('./{{{name}}}')(options, internals);
   {{/stableObjEach}}
-  {{/unless}}
-
+  {{/if}}
 
   /**
    * Make a generic request to the API
