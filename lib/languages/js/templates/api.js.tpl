@@ -6,7 +6,7 @@ import axios from 'axios';
 import qs from 'qs';
 import { EventSource } from 'eventsource';
 import FormData from 'form-data';
-import uriTemplate from 'uri-template';
+import { parse as uriTemplateParse } from 'uri-template';
 {{#unless options.compressed}}
 {{#stableObjEach api.resources as |resource name|}}
 import {{{name}}} from './{{{name}}}.js';
@@ -31,7 +31,7 @@ export default function(options = {}) {
     const { path: actionPath, params: actionParams, method, sseStream } = REQUEST_INFO[resourceName].actions[actionName];
     const uriPath = [ resourcePath || '', actionPath || '' ].join('');
     const allParams = [ ...GLOBAL_PARAMS, ...(actionParams || []), ...(resourceParams || []) ];
-    const tpl = uriTemplate.parse(uriPath);
+    const tpl = uriTemplateParse(uriPath);
     return function(params = {}, opts = {}) {
       const pathParams = {};
       const req = {
