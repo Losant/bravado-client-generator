@@ -79,14 +79,14 @@ export default function(options = {}) {
   });
   {{else}}
   {{#stableObjEach api.resources as |resource name|}}
-  internals.{{{name}}} = {{{name}}};
+  internals.{{{name}}} = {{{name}}}(options, internals);
   {{/stableObjEach}}
   {{/if}}
 
   /**
    * Make a generic request to the API
    */
-  internals.request = function(req = {}, opts = {}) {
+  internals.request = async function(req = {}, opts = {}) {
     opts = { ...options, ...opts };
     req.headers = {
       ...req.headers,
@@ -120,28 +120,24 @@ export default function(options = {}) {
     }
     req.url = (opts.url || '{{{options.root}}}') + req.url;
     req.paramsSerializer = (params) => { return qs.stringify(params); };
-    const reqPromise = async () => {
-      try {
-        const response = await axios(req);
-        return response.data;
-      } catch (axiosError) {
-        let err;
-        if (axiosError.response) {
-          const errorData = axiosError.response.data || {};
-          err = new Error(errorData.message);
-          Object.keys(errorData).forEach((key) => {
-            if (key !== 'message') { err[key] = errorData[key]; }
-          });
-          err.statusCode = axiosError.response.status;
-          if (err.statusCode === 413 && !err.message) { err.message = 'Request entity too large.'; }
-        } else {
-          err = axiosError;
-        }
-        throw err;
+    try {
+      const response = await axios(req);
+      return response.data;
+    } catch (axiosError) {
+      let err;
+      if (axiosError.response) {
+        const errorData = axiosError.response.data || {};
+        err = new Error(errorData.message);
+        Object.keys(errorData).forEach((key) => {
+          if (key !== 'message') { err[key] = errorData[key]; }
+        });
+        err.statusCode = axiosError.response.status;
+        if (err.statusCode === 413 && !err.message) { err.message = 'Request entity too large.'; }
+      } else {
+        err = axiosError;
       }
-    };
-
-    return reqPromise();
+      throw err;
+    }
   };
 
   internals.attachEventSource = (req = {}, opts = {}) => {
