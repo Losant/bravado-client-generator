@@ -5,12 +5,9 @@
   "type": "module",
   "main": "lib/index.js",
   "exports": {
-    ".": {
-      "require": "./lib/index.js",
-      "import": "./lib/index.js",
-      "default": "./lib/index.js"
-    },
-    "./lib/schemas/*.json": "./lib/schemas/*.json"
+    "require": "./lib/index.js",
+    "import": "./lib/index.js",
+    "default": "./lib/index.js"
   },
   "dependencies": {
     "axios": "^1.10.0",
