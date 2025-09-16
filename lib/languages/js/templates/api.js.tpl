@@ -2,15 +2,18 @@
 {{{commentify options.license}}}
 
 {{/if}}
-var axios = require('axios');
-var qs = require('qs');
-var { EventSource } = require('eventsource');
-var FormData = require('form-data');
-var uriTemplate = require('uri-template');
-
-var GLOBAL_PARAMS = {{{json globalParams}}};
-
-var REQUEST_INFO = require('../schemas/apiInfo.json');
+import axios from 'axios';
+import qs from 'qs';
+import { EventSource } from 'eventsource';
+import FormData from 'form-data';
+import { parse as uriTemplateParse } from 'uri-template';
+{{#unless options.compressed}}
+{{#stableObjEach api.resources as |resource name|}}
+import {{{name}}} from './{{{name}}}.js';
+{{/stableObjEach}}
+{{/unless}}
+import REQUEST_INFO from '../schemas/apiInfo.json' with { type: 'json' };
+import GLOBAL_PARAMS from './constants/globalParams.json' with { type: 'json' };
 
 /**
  {{#if api.info.title}}
@@ -21,29 +24,17 @@ var REQUEST_INFO = require('../schemas/apiInfo.json');
  {{/if}}
  * version: {{{api.info.version}}}
  */
-module.exports = function (options) {
-  options = options || {};
-  var internals = {};
-  internals.makeRequestFunction = function(name, actionName) {
-    var { params: resourceParams, path: resourcePath } = REQUEST_INFO[name];
-    var { path: actionPath, params: actionParams, method, sseStream } = REQUEST_INFO[name].actions[actionName];
-    var uriPath = [ resourcePath || '', actionPath || '' ].join('');
-    var allParams = [ ...GLOBAL_PARAMS, ...(actionParams || []), ...(resourceParams || []) ];
-    var tpl = uriTemplate.parse(uriPath);
-    return function(params, opts, cb) {
-      if ('function' === typeof params) {
-        cb = params;
-        params = {};
-        opts = {};
-      } else if ('function' === typeof opts) {
-        cb = opts;
-        opts = {};
-      } else if (!opts) {
-        opts = {};
-      }
-      params = params || {};
-      var pathParams = {};
-      var req = {
+export default function(options = {}) {
+  const internals = {};
+  internals.makeRequestFunction = function(resourceName, actionName) {
+    const { params: resourceParams, path: resourcePath } = REQUEST_INFO[resourceName];
+    const { path: actionPath, params: actionParams, method, sseStream } = REQUEST_INFO[resourceName].actions[actionName];
+    const uriPath = [ resourcePath || '', actionPath || '' ].join('');
+    const allParams = [ ...GLOBAL_PARAMS, ...(actionParams || []), ...(resourceParams || []) ];
+    const tpl = uriTemplateParse(uriPath);
+    return function(params = {}, opts = {}) {
+      const pathParams = {};
+      const req = {
         headers: {},
         params: {}
       };
@@ -76,8 +67,8 @@ module.exports = function (options) {
         }
       });
       req.url = tpl.expand(pathParams);
-      return sseStream ? internals.attachEventSource(req, opts, cb) : internals.request(req, opts, cb);
-    }
+      return sseStream ? internals.attachEventSource(req, opts) : internals.request(req, opts);
+    };
   };
   {{#if options.compressed}}
   Object.keys(REQUEST_INFO).forEach((resource) => {
@@ -88,27 +79,22 @@ module.exports = function (options) {
   });
   {{else}}
   {{#stableObjEach api.resources as |resource name|}}
-  internals.{{{name}}} = require('./{{{name}}}')(options, internals);
+  internals.{{{name}}} = {{{name}}}(options, internals);
   {{/stableObjEach}}
   {{/if}}
 
   /**
    * Make a generic request to the API
    */
-  internals.request = function (req, opts, cb) {
-    req = req || {};
-    if ('function' === typeof opts) {
-      cb = opts;
-      opts = {};
-    }
+  internals.request = async function(req = {}, opts = {}) {
     opts = { ...options, ...opts };
     req.headers = {
       ...req.headers,
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'Accept-Version': '^{{{api.info.version}}}'
     };
     if (opts.accessToken) {
-      req.headers.Authorization = 'Bearer ' + opts.accessToken;
+      req.headers.Authorization = `Bearer ${opts.accessToken}`;
     }
     if (opts.timeout) {
       req.timeout = opts.timeout;
@@ -117,9 +103,9 @@ module.exports = function (options) {
       req.headers['Accept-Version'] = opts.acceptVersion;
     }
     if (opts.multipartTypes) {
-      var data = req.data || {};
+      const data = req.data || {};
       req.data = new FormData();
-      Object.keys(data).forEach(function(key) {
+      Object.keys(data).forEach((key) => {
         if (opts.multipartTypes[key] === 'object') {
           req.data.append(key, JSON.stringify(data[key]));
         } else if (opts.multipartTypes[key] === 'file' && typeof data[key] === 'string') {
@@ -133,54 +119,44 @@ module.exports = function (options) {
       }
     }
     req.url = (opts.url || '{{{options.root}}}') + req.url;
-    req.paramsSerializer = function(params) { return qs.stringify(params); };
-    var promise = axios(req, cb)
-      .then(function (response) {
-        response = response.data;
-        if (cb) { return setTimeout(function () { cb(null, response); }, 0); }
-        return response;
-      })
-      .catch(function (axiosError) {
-        var err;
-        if (axiosError.response) {
-          var errorData = axiosError.response.data || {};
-          err = new Error(errorData.message);
-          Object.keys(errorData).forEach(function(key) {
-            if (key !== 'message') { err[key] = errorData[key]; }
-          });
-          err.statusCode = axiosError.response.status;
-          if (err.statusCode === 413 && !err.message) { err.message = 'Request entity too large.'; }
-        } else {
-          err = axiosError;
-        }
-        if (cb) { return setTimeout(function () { cb(err); }, 0); }
-        throw err;
-      });
-    if (!cb) { return promise; }
+    req.paramsSerializer = (params) => { return qs.stringify(params); };
+    try {
+      const response = await axios(req);
+      return response.data;
+    } catch (axiosError) {
+      let err;
+      if (axiosError.response) {
+        const errorData = axiosError.response.data || {};
+        err = new Error(errorData.message);
+        Object.keys(errorData).forEach((key) => {
+          if (key !== 'message') { err[key] = errorData[key]; }
+        });
+        err.statusCode = axiosError.response.status;
+        if (err.statusCode === 413 && !err.message) { err.message = 'Request entity too large.'; }
+      } else {
+        err = axiosError;
+      }
+      throw err;
+    }
   };
 
-  internals.attachEventSource = function (req, opts, cb) {
-    req = req || {};
-    if ('function' === typeof opts) {
-      cb = opts;
-      opts = {};
-    }
+  internals.attachEventSource = (req = {}, opts = {}) => {
     opts = { ...options, ...opts };
 
     req.headers = {
       ...req.headers,
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'Accept-Version': '^{{{api.info.version}}}'
     };
     if (opts.accessToken) {
-      req.headers.Authorization = 'Bearer ' + opts.accessToken;
+      req.headers.Authorization = `Bearer ${opts.accessToken}`;
     }
     if (opts.acceptVersion) {
       req.headers['Accept-Version'] = opts.acceptVersion;
     }
-    var fullUrl = (opts.url || '{{{options.root}}}') + req.url + '?' + qs.stringify(req.params);
+    const fullUrl = `${(opts.url || '{{{options.root}}}')}${req.url}?${qs.stringify(req.params)}`;
 
-    var es = new EventSource(fullUrl, {
+    const es = new EventSource(fullUrl, {
       fetch: (input, init) => {
         return fetch(input, {
           ...init,
@@ -192,17 +168,16 @@ module.exports = function (options) {
       }
     });
 
-    var promise = new Promise(function(resolve, reject) {
-      es.onopen = function(){ resolve(); };
-      es.onerror = function(err){ reject(err); };
+    return new Promise((resolve, reject) => {
+      es.onopen = resolve;
+      es.onerror = reject;
     })
-      .then(function(){
+      .then(() => {
         es.onopen = null;
         es.onerror = null;
-        if (cb) { return setTimeout(function () { cb(null, es); }, 0); }
         return es;
       })
-      .catch(function (err) {
+      .catch((err) => {
         try {
           es.close();
         } catch {
@@ -210,16 +185,14 @@ module.exports = function (options) {
         }
         es.onopen = null;
         es.onerror = null;
-        if (cb) { return setTimeout(function () { cb(err); }, 0); }
         throw err;
       });
-    if (!cb) { return promise; }
   };
 
   /**
    * Set a client option
    */
-  internals.setOption = function (name, value) {
+  internals.setOption = function(name, value) {
     options[name] = value;
     return internals;
   };
@@ -227,7 +200,7 @@ module.exports = function (options) {
   /**
    * Get a client option
    */
-  internals.getOption = function (name) {
+  internals.getOption = function(name) {
     return options[name];
   };
 

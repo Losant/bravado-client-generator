@@ -10,9 +10,9 @@ $ npm install --save {{dasherize api.info.title}}-js
 ## Usage
 To create a new API client:
 ```javascript
-var api = require('{{dasherize api.info.title}}-js');
+import api from '{{dasherize api.info.title}}-js';
 
-var client = api.createClient({
+const client = api.createClient({
   accessToken: '...'
 });
 ```
