@@ -103,15 +103,15 @@ export default function(options = {}) {
       req.headers['Accept-Version'] = opts.acceptVersion;
     }
     if (opts.multipartTypes) {
-      const data = req.data || {};
+      const multipartData = req.data || {};
       req.data = new FormData();
-      Object.keys(data).forEach((key) => {
+      Object.keys(multipartData).forEach((key) => {
         if (opts.multipartTypes[key] === 'object') {
-          req.data.append(key, JSON.stringify(data[key]));
-        } else if (opts.multipartTypes[key] === 'file' && typeof data[key] === 'string') {
-          req.data.append(key, data[key], { filename: key });
+          req.data.append(key, JSON.stringify(multipartData[key]));
+        } else if (opts.multipartTypes[key] === 'file' && typeof multipartData[key] === 'string') {
+          req.data.append(key, multipartData[key], { filename: key });
         } else {
-          req.data.append(key, data[key]);
+          req.data.append(key, multipartData[key]);
         }
       });
       if (req.data.getHeaders) {
