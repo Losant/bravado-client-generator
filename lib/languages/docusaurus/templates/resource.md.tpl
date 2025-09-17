@@ -1,5 +1,4 @@
 ---
-category: Rest API
 description: A detailed look at the various REST actions supported by the {{niceResourceName resourceName}} resource of the {{{api.info.title}}}.
 toc_max_heading_level: 2
 sidebar_position: {{sidebarPosition}}
