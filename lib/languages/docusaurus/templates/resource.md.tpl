@@ -29,11 +29,11 @@ parameters and the potential responses.
 **DEPRECATED**
 
 {{/if}}
-### Method And Url {#{{actionName}}-method-url}
+### Method And Url {/* #{{actionName}}-method-url */}
 
 <p>{{upper action.method}} {{{joinPath ../options.root ../api.basePath ../resource.path action.path}}}</p>
 
-### Authentication {#{{actionName}}-authentication}
+### Authentication {/* #{{actionName}}-authentication */}
 
 {{#if (hasAuthScopes ../api ../resource action)}}
 A valid API access token is required to access this endpoint. The token must
@@ -44,7 +44,7 @@ No authentication is required for this endpoint.
 {{/if}}
 
 {{#if (hasParamType ../api ../resourceName actionName "path")}}
-### Request Path Components {#{{actionName}}-path-components}
+### Request Path Components {/* #{{actionName}}-path-components */}
 
 | Path Component | Description | Example |
 | :------------- | :---------- | :------ |
@@ -56,7 +56,7 @@ No authentication is required for this endpoint.
 
 {{/if}}
 {{#if (hasParamType ../api ../resourceName actionName "query")}}
-### Request Query Parameters {#{{actionName}}-query-params}
+### Request Query Parameters {/* #{{actionName}}-query-params */}
 
 | Name | Required | Description | Default | Example |
 | :--- | :------- | :---------- | :------ | :------ |
@@ -68,7 +68,7 @@ No authentication is required for this endpoint.
 
 {{/if}}
 {{#if (hasParamType ../api ../resourceName actionName "header")}}
-### Request Headers {#{{actionName}}-headers}
+### Request Headers {/* #{{actionName}}-headers */}
 
 | Name | Required | Description | Default |
 | :--- | :------- | :---------- | :------ |
@@ -83,7 +83,7 @@ No authentication is required for this endpoint.
 
 {{/if}}
 {{#if (hasParamType ../api ../resourceName actionName "body")}}
-### Request Body {#{{actionName}}-body}
+### Request Body {/* #{{actionName}}-body */}
 
 {{#definedParams ../api ../resource action false}}
 {{#eq in "body"}}
@@ -99,7 +99,7 @@ valid body for this request:
 {{/definedParams}}
 {{/if}}
 {{#if (hasParamType ../api ../resourceName actionName "multipart")}}
-### Request Body {#{{actionName}}-body}
+### Request Body {/* #{{actionName}}-body */}
 
 The body of the request should be a [multipart form data](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods/POST) post containing the following:
 
@@ -112,7 +112,7 @@ The body of the request should be a [multipart form data](https://developer.mozi
 {{/definedParams}}
 
 {{/if}}
-### Curl Example {#{{actionName}}-curl-example}
+### Curl Example {/* #{{actionName}}-curl-example */}
 
 ```bash
 {{#if (hasParamType ../api ../resourceName actionName "multipart")}}
@@ -129,7 +129,7 @@ curl -H 'Content-Type: application/json' \
 ```
 
 {{#if action.sseStream}}
-### SSE Stream for a Successful Response {#{{actionName}}-successful-responses}
+### SSE Stream for a Successful Response {/* #{{actionName}}-successful-responses */}
 
 {{#stableObjEach action.responses as |response code|}}
 {{#eq code '200'}}
@@ -143,7 +143,7 @@ curl -H 'Content-Type: application/json' \
 {{/eq}}
 {{/stableObjEach}}
 {{else}}
-### Successful Responses {#{{actionName}}-successful-responses}
+### Successful Responses {/* #{{actionName}}-successful-responses */}
 
 | Code | Type | Description |
 | :--- | :--- | :---------- |
@@ -154,7 +154,7 @@ curl -H 'Content-Type: application/json' \
 {{/stableObjEach}}
 {{/if}}
 
-### Error Responses {#{{actionName}}-error-responses}
+### Error Responses {/* #{{actionName}}-error-responses */}
 
 | Code | Type | Description |
 | :--- | :--- | :---------- |
@@ -168,7 +168,7 @@ curl -H 'Content-Type: application/json' \
 ## Schemas
 {{#stableObjEach (schemasForResource api resource) as |wrap defPath|}}
 
-### {{wrap.title}} {#{{schemaAnchor defPath ~}} }
+### {{wrap.title}} {/* #{{schemaAnchor defPath ~}} */}
 
 {{wrap.description}}
 
