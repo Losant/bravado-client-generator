@@ -4,6 +4,7 @@
   "description": "Code generator for Bravado API clients",
   "type": "module",
   "main": "lib/main.js",
+  "packageManager": "pnpm@11.15.1",
   "bin": {
     "bravado-client-generator": "bin/generate"
   },
