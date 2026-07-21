@@ -12,14 +12,21 @@ jobs:
       contents: read
     steps:
     - name: Cancel Previous Runs
-      uses: styfle/cancel-workflow-action@0.11.0
+      # tag 0.13.1
+      uses: styfle/cancel-workflow-action@d07a454dad7609a92316b57b23c9ccfd4f59af66
       with:
         access_token: ${{ github.token }}
     - uses: actions/checkout@v2
+    - name: Setup pnpm
+      # tag v5.0.0
+      uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320
+      with:
+        run_install: false
     - name: Setup Node
-      uses: actions/setup-node@v3
+      # tag v6.3.0
+      uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
       with:
         node-version-file: '.node-version'
-        cache: 'yarn'
-    - run: yarn install --frozen-lockfile
-    - run: yarn lint
+        cache: 'pnpm'
+    - run: pnpm install --frozen-lockfile
+    - run: pnpm lint
